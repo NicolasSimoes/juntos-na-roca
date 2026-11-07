@@ -33,12 +33,12 @@ func _ready() -> void:
 	add_child(titulo)
 	_montar_mesa()
 	_montar_album()
-	var frase := Hud.rotulo("“Na roça, ninguém faz nada sozinho.”", 12, Color.WHITE, 4)
+	var frase := Hud.rotulo("Juntos, vocês conseguiram!", 14, Color.WHITE, 4)
 	frase.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	frase.position = Vector2(0, 306)
 	frase.size = Vector2(640, 20)
 	add_child(frase)
-	_convite = Hud.rotulo("", 9, Color(1, 0.95, 0.6), 3)
+	_convite = Hud.rotulo("", 12, Color(1, 0.95, 0.6), 4)
 	_convite.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_convite.position = Vector2(0, 334)
 	_convite.size = Vector2(640, 16)
@@ -64,22 +64,24 @@ func _ready() -> void:
 	add_child(_confete)
 	Sons.tocar("toca_aqui")
 	await get_tree().create_timer(3.0).timeout
-	_convite.text = "Para jogar de novo, os dois apertam AÇÃO (Espaço e Enter)"
+	_convite.text = "Jogar de novo? Os dois: Espaço e Enter!"
 
 
 func _montar_mesa() -> void:
 	# a dupla e a Vovó atrás da mesa
+	# Aparencia decide a imagem de cada um (netos e Vovó)
 	var gente := [
-		["res://assets/sprites/personagens/p1_comemora1.png", Vector2(64, 126)],
-		["res://assets/sprites/personagens/vovo_zefa.png", Vector2(132, 126)],
-		["res://assets/sprites/personagens/p2_comemora1.png", Vector2(200, 126)],
+		[Aparencia.neto(1, "frente"), Vector2(64, 126)],
+		[Aparencia.vovo(), Vector2(132, 126)],
+		[Aparencia.neto(2, "frente"), Vector2(200, 126)],
 	]
 	for g in gente:
 		var t := TextureRect.new()
-		t.texture = load(g[0])
+		t.texture = g[0]
 		t.position = g[1]
 		t.size = Vector2(48, 72)
 		t.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		t.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		add_child(t)
 	var mesa := TextureRect.new()
 	mesa.texture = load("res://assets/sprites/extras/mesa.png")
@@ -124,7 +126,7 @@ func _montar_album() -> void:
 	var coluna := VBoxContainer.new()
 	coluna.add_theme_constant_override("separation", 2)
 	moldura.add_child(coluna)
-	var topo := Hud.rotulo("Álbum da dupla", 10, Color(0.45, 0.3, 0.2), 0)
+	var topo := Hud.rotulo("Nosso álbum", 11, Color(0.45, 0.3, 0.2), 0)
 	topo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	coluna.add_child(topo)
 	_imagem = TextureRect.new()
@@ -144,7 +146,7 @@ func _montar_album() -> void:
 
 func _mostrar_foto() -> void:
 	if Jogo.fotos.is_empty():
-		_legenda.text = "(sem fotos desta vez)"
+		_legenda.text = "Sem fotos desta vez"
 		return
 	var f: Dictionary = Jogo.fotos[_foto % Jogo.fotos.size()]
 	_imagem.texture = f["textura"]

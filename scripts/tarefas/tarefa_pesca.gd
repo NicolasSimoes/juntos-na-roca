@@ -4,7 +4,7 @@ extends Tarefa
 
 
 func _init() -> void:
-	dica = "Quem tem o puçá segue a sombra do peixe e aperta AÇÃO quando ele pular!"
+	dica = "Sigam a sombra! Peguem quando o peixe pular!"
 
 
 func posicao_estacao() -> Vector2:

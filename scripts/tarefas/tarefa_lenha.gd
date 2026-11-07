@@ -10,7 +10,7 @@ var _tora: CarregarJuntos
 
 
 func _init() -> void:
-	dica = "Um de cada vez! Olhem a seta: aperta só quem tem a vez."
+	dica = "Um de cada vez! Olhem a seta."
 
 
 func posicao_estacao() -> Vector2:
@@ -36,12 +36,12 @@ func _serrou() -> void:
 	overlay = null
 	fazenda.travar(false)
 	_fase = "carregar"
-	dica = "Fiquem pertinho um do outro. Se se afastarem demais, a tora cai!"
+	dica = "Fiquem pertinho, senão a tora cai!"
 	_tora = CarregarJuntos.new().configurar("res://assets/sprites/objetos/tora.png", Lugares.TORA + Vector2(0, 8), Lugares.DESTINO_LENHA)
 	fazenda.mundo.add_child(_tora)
 	_tora.entregue.connect(_entregou)
-	_tora.caiu.connect(func(): fazenda.hud.aviso("Opa, caiu! Fiquem pertinho."))
-	fazenda.hud.falar("Agora levem a tora juntos até o lado da casa. Os dois pertinho dela apertam AÇÃO!")
+	_tora.caiu.connect(func(): fazenda.hud.aviso("Caiu! Fiquem pertinho."))
+	fazenda.hud.falar("Agora levem a tora até a casa. Juntos!")
 
 
 func _entregou() -> void:
