@@ -48,7 +48,7 @@ func _ready() -> void:
 	_titulo.size = Vector2(640, 40)
 	_titulo.pivot_offset = Vector2(320, 20)
 	add_child(_titulo)
-	_sub = Hud.rotulo("Os dois apertam AÇÃO ao mesmo tempo!", 11, Color.WHITE, 4)
+	_sub = Hud.rotulo("Os dois: AÇÃO juntos!", 12, Color.WHITE, 4)
 	_sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_sub.position = Vector2(0, 306)
 	_sub.size = Vector2(640, 20)
@@ -157,25 +157,25 @@ func _altura_do_pulo() -> float:
 
 
 func _ponto_do_toque() -> Vector2:
-	# a mão fica nas linhas 9 a 11 do desenho (de 24); os pés na linha 22
-	return Vector2(320, CHAO - 56.0 - 12.0 * ESCALA)
+	# a mão fica mais ou menos na linha 10 do quadro (de 20)
+	return Vector2(320, CHAO - 56.0 - 10.0 * ESCALA)
 
 
-func _quadro(n: int, lado: int) -> String:
-	var base := "res://assets/sprites/personagens/p%d_" % n
+## Qual imagem do neto mostrar agora (as poses vêm de scripts/aparencia.gd).
+func _quadro(n: int, _lado: int) -> Texture2D:
 	if _t < 0.0:
 		if _tempo - _apertos[n] < 0.7:
-			return base + "lado_mao.png"
-		return base + "lado_parado.png"
+			return Aparencia.neto(n, "mao")
+		return Aparencia.neto(n, "lado")
 	if _t < T_CORRER:
-		return base + "lado_anda%d.png" % (1 + int(_t * 14.0) % 4)
+		return Aparencia.neto(n, ["passo1", "lado", "passo2", "lado"][int(_t * 14.0) % 4])
 	if _t < T_SUBIR:
-		return base + "lado_pulo.png"
+		return Aparencia.neto(n, "pulo")
 	if _t < T_SEGURA:
-		return base + "lado_toca.png"
+		return Aparencia.neto(n, "toca")
 	if _t < T_DESCER:
-		return base + "lado_pulo.png"
-	return base + ("comemora1.png" if int((_t - T_DESCER) * 7.0) % 2 == 0 else "comemora2.png")
+		return Aparencia.neto(n, "pulo")
+	return Aparencia.neto(n, "comemora1" if int((_t - T_DESCER) * 7.0) % 2 == 0 else "comemora2")
 
 
 # ------------------------------------------------------------------ desenho
@@ -194,12 +194,12 @@ func _desenhar() -> void:
 		_desenho.draw_set_transform(Vector2(x, CHAO), 0.0, Vector2(1.0, 0.3))
 		_desenho.draw_circle(Vector2.ZERO, 30.0 * tam_sombra, Color(0, 0, 0, 0.3))
 		# o neto (o da esquerda olha para a direita, o da direita é espelhado)
-		var t := Jogo.tex(_quadro(n, lado))
+		var t := _quadro(n, lado)
 		var espelho := 1.0 if n == 1 else -1.0
 		if _t >= T_DESCER:
 			espelho = 1.0
 		_desenho.draw_set_transform(Vector2(x, y), 0.0, Vector2(ESCALA * espelho, ESCALA))
-		_desenho.draw_texture(t, Vector2(-8, -24))
+		_desenho.draw_texture(t, Vector2(-t.get_width() / 2.0, -t.get_height()))
 		_desenho.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 		# tecla de cada um, enquanto espera
 		if _t < 0.0:
@@ -208,7 +208,7 @@ func _desenhar() -> void:
 			_desenho.draw_string_outline(f, pos, tecla, HORIZONTAL_ALIGNMENT_CENTER, 100, 12, 4, Color.BLACK)
 			_desenho.draw_string(f, pos, tecla, HORIZONTAL_ALIGNMENT_CENTER, 100, 12, Jogo.COR[n].lightened(0.3))
 			if _tempo - _apertos[n] < 0.7:
-				var brilho := Vector2(x - lado * MAO, CHAO - 12.0 * ESCALA)
+				var brilho := Vector2(x - lado * MAO, CHAO - 10.0 * ESCALA)
 				_estrela(brilho, 8.0, Color(1, 1, 0.7, 0.9), _tempo * 4.0)
 	# o "PÁ!" do toque
 	if _t >= T_SUBIR and _t < T_SUBIR + 0.7:
