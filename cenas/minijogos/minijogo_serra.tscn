@@ -1,0 +1,131 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="PackedScene" path="res://cenas/minijogos/minijogo_base.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scripts/minijogos/minijogo_serra.gd" id="2_cola"]
+[ext_resource type="Texture2D" path="res://assets/sprites/tiles/grama.png" id="3_grama"]
+[ext_resource type="Texture2D" path="res://assets/sprites/objetos/tora.png" id="4_tora"]
+[ext_resource type="Texture2D" path="res://assets/sprites/objetos/serra.png" id="5_serra"]
+[ext_resource type="Texture2D" path="res://assets/sprites/personagens/p1_lado_parado.png" id="6_neto"]
+[ext_resource type="Texture2D" path="res://assets/sprites/extras/seta.png" id="7_seta"]
+[ext_resource type="Texture2D" path="res://assets/sprites/extras/pixel.png" id="8_pixel"]
+
+[node name="MinijogoSerra" instance=ExtResource("1_base")]
+editor_description = "Minijogo da serra (dia 1, tarefa Lenha). Esta cena HERDA de minijogo_base.tscn (painel, título, textos de cada papel) e só acrescenta os nós dentro de Painel/Conteudo. O script minijogo_serra.gd liga a regra (regra_serra.gd) a estes nós."
+script = ExtResource("2_cola")
+
+[node name="Chao" type="TextureRect" parent="Painel/Conteudo"]
+editor_description = "Grama: o tile grama.png repetido (stretch_mode = Tile) e ampliado 3x para combinar com o tamanho dos outros sprites."
+layout_mode = 0
+offset_top = 215.0
+offset_right = 187.0
+offset_bottom = 227.0
+scale = Vector2(3, 3)
+mouse_filter = 2
+texture = ExtResource("3_grama")
+expand_mode = 1
+stretch_mode = 1
+
+[node name="Tora" type="Sprite2D" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "A tora (sprite tora.png de 24x16, ampliado 10x). Não se mexe: a serra e o corte é que mudam."
+position = Vector2(275, 198)
+scale = Vector2(10, 10)
+texture = ExtResource("4_tora")
+
+[node name="Corte" type="ColorRect" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "O corte na tora. Começa com altura 0; o script aumenta size.y conforme os cortes (até profundidade_maxima)."
+offset_left = 277.0
+offset_top = 148.0
+offset_right = 283.0
+offset_bottom = 148.0
+mouse_filter = 2
+color = Color(0.2, 0.12, 0.06, 1)
+
+[node name="Serra" type="Sprite2D" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "Serra de dois cabos (serra.png, 12x). O script soma a esta posição o vai-e-vem (lado da regra) e a descida (profundidade do corte)."
+position = Vector2(280, 142)
+scale = Vector2(12, 12)
+texture = ExtResource("5_serra")
+
+[node name="NetoA" type="Sprite2D" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "Neto do papel A (cabo da esquerda). A textura é trocada no script conforme o jogador (p1 laranja ou p2 azul). offset (-8,-24) põe a origem nos pés."
+position = Vector2(118, 232)
+scale = Vector2(4, 4)
+texture = ExtResource("6_neto")
+centered = false
+offset = Vector2(-8, -24)
+
+[node name="NetoB" type="Sprite2D" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "Neto do papel B (cabo da direita), virado para a esquerda com flip_h."
+position = Vector2(442, 232)
+scale = Vector2(4, 4)
+texture = ExtResource("6_neto")
+centered = false
+offset = Vector2(-8, -24)
+flip_h = true
+
+[node name="Serragem" type="CPUParticles2D" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "Rajada de serragem a cada puxada certa. one_shot + explosiveness 1 = solta as 6 partículas de uma vez; o script chama restart() a cada acerto."
+position = Vector2(280, 150)
+emitting = false
+amount = 6
+lifetime = 0.6
+one_shot = true
+explosiveness = 1.0
+texture = ExtResource("8_pixel")
+direction = Vector2(0, -1)
+spread = 70.0
+gravity = Vector2(0, 220)
+initial_velocity_min = 40.0
+initial_velocity_max = 130.0
+scale_amount_min = 1.5
+scale_amount_max = 2.0
+color = Color(0.909804, 0.768627, 0.541176, 1)
+
+[node name="SetaVez" type="Sprite2D" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "Seta em cima do cabo de quem tem a vez. O script move para o cabo certo e pinta (modulate) com a cor do jogador."
+position = Vector2(155, 72)
+scale = Vector2(2, 2)
+texture = ExtResource("7_seta")
+
+[node name="SuaVez" type="Label" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "Texto acima da seta: 'SUA VEZ!' ou 'agarrou...' quando a serra trava."
+offset_left = 85.0
+offset_top = 46.0
+offset_right = 225.0
+offset_bottom = 60.0
+theme_type_variation = &"Rotulo"
+theme_override_font_sizes/font_size = 10
+text = "SUA VEZ!"
+horizontal_alignment = 1
+
+[node name="Progresso" type="ProgressBar" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "Barra de puxadas (0 a 12). Estilo vem da variação BarraJogo do tema (assets/tema/tema_jogo.tres)."
+offset_left = 170.0
+offset_top = 236.0
+offset_right = 370.0
+offset_bottom = 244.0
+mouse_filter = 2
+theme_type_variation = &"BarraJogo"
+max_value = 12.0
+step = 1.0
+show_percentage = false
+
+[node name="Contador" type="Label" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "Texto '3 de 12 puxadas', atualizado pelo script."
+offset_left = 380.0
+offset_top = 232.0
+offset_right = 500.0
+offset_bottom = 246.0
+theme_type_variation = &"Rotulo"
+theme_override_font_sizes/font_size = 8
+text = "0 de 12 puxadas"

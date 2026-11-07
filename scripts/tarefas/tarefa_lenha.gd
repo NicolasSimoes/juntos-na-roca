@@ -2,6 +2,9 @@ extends Tarefa
 ## Dia 1 — Lenha. Os dois serram a tora com a serra de dois cabos,
 ## apertando alternado, e depois carregam a tora juntos até a casa.
 
+## preload carrega a cena uma vez, quando o script é carregado.
+const CENA_SERRA := preload("res://cenas/minijogos/minijogo_serra.tscn")
+
 var _fase := "serrar"
 var _tora: CarregarJuntos
 
@@ -21,7 +24,9 @@ func papeis() -> Array:
 
 func comecar(a: Jogador, b: Jogador) -> void:
 	super.comecar(a, b)
-	var mj := MinijogoSerra.new()
+	# A tela do minijogo agora é uma cena montada no editor (com os sprites):
+	# instantiate() cria uma cópia dela, como "new()" fazia com o script.
+	var mj: MinijogoSerra = CENA_SERRA.instantiate()
 	abrir_minijogo(mj)
 	mj.concluido.connect(_serrou)
 

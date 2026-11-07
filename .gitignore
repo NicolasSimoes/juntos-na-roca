@@ -1,2 +1,5 @@
 # Pasta que o Godot cria sozinho
 .godot/
+
+# Capturas de tela para comparar antes/depois
+capturas/
