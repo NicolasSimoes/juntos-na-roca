@@ -205,7 +205,7 @@ func _tarefa_terminou(t: Tarefa) -> void:
 	ocupado = false
 	if Jogo.dia_completo():
 		await hud.falar(Textos.ELOGIOS.get(t.id, "Muito bem!"))
-		hud.falar("Tudo pronto por hoje! Agora os dois na porta de casa, para dormir.")
+		hud.falar(Textos.HORA_DE_DORMIR)
 		estacao_dormir.ativa = true
 	else:
 		hud.falar(Textos.ELOGIOS.get(t.id, "Muito bem!"))

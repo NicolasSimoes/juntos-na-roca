@@ -36,6 +36,9 @@ const ELOGIOS := {
 
 ## Créditos: quem fez o jogo.
 # TODO grupo: completar nomes e papéis (ex.: ["Fulana", "programação"]).
+## Quando todas as tarefas do dia acabam.
+const HORA_DE_DORMIR := "Tudo pronto! Os dois na porta, para dormir."
+
 const CREDITOS_EQUIPE := [
 	["Nicolas Simões", ""],
 	["Lucas Braide", ""],
