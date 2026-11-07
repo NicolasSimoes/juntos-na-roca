@@ -27,6 +27,6 @@ func test_puxada_atualiza_barra_e_contador() -> void:
 	mj.regra.passo(0.016, true, false)
 	mj._mostrar(0.016)
 	afirmar_igual(mj.get_node("%Progresso").value, 1.0)
-	afirmar_igual(mj.get_node("%Contador").text, "1 de 12 puxadas")
+	afirmar_igual(mj.get_node("%Contador").text, "PUXADAS  1 / 12")
 	afirmar(mj.get_node("%Corte").size.y > 0.0, "o corte deveria ter começado")
 	mj.free()

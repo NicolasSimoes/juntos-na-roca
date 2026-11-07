@@ -76,4 +76,4 @@ func passo(delta: float, apertou_a: bool, apertou_b: bool) -> void:
 		else:
 			# Puxou fora da vez: a serra agarra por um instante.
 			travada = TEMPO_TRAVADA
-			errou.emit("A serra agarrou! Um de cada vez.")
+			errou.emit("Agarrou! Um de cada vez.")

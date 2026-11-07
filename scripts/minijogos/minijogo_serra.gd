@@ -38,13 +38,13 @@ extends Minijogo
 ## raiz da cena está selecionado. Dá para ajustar sem abrir o código.
 
 ## Quanto a serra anda para cada lado a cada puxada (em pixels).
-@export var vai_e_vem := 34.0
+@export var vai_e_vem := 26.0
 ## Velocidade com que a serra desliza até o lado puxado (unidades por segundo).
 @export var velocidade_serra := 7.0
 ## Profundidade do corte quando a tora estiver serrada (altura da tora, em pixels).
-@export var profundidade_maxima := 80.0
+@export var profundidade_maxima := 64.0
 ## Distância do centro da serra até cada cabo (onde a seta "SUA VEZ!" aparece).
-@export var distancia_cabo := 125.0
+@export var distancia_cabo := 92.0
 
 
 ## ---------------------------------------------------------------------
@@ -93,8 +93,8 @@ func montar() -> void:
 	# Textos que a classe Minijogo mostra no topo e na faixa de baixo.
 	# Jogo.tecla_acao(n) devolve "Espaço" para o jogador 1 e "Enter" para o 2.
 	titulo = "Serrar a tora"
-	texto_a = "%s na sua vez (cabo da esquerda)" % Jogo.tecla_acao(na)
-	texto_b = "%s na sua vez (cabo da direita)" % Jogo.tecla_acao(nb)
+	texto_a = "APERTE %s na sua vez" % Jogo.tecla_acao(na)
+	texto_b = "APERTE %s na sua vez" % Jogo.tecla_acao(nb)
 
 	# SINAIS: a regra "avisa" quando algo acontece; aqui decidimos o que fazer.
 	# .connect(funcao) = "quando este sinal for emitido, chame esta função".
@@ -184,4 +184,4 @@ func _mostrar(delta: float) -> void:
 
 	# Barra e contador de puxadas.
 	_progresso.value = regra.cortes
-	_contador.text = "%d de %d puxadas" % [regra.cortes, RegraSerra.CORTES]
+	_contador.text = "PUXADAS  %d / %d" % [regra.cortes, RegraSerra.CORTES]
