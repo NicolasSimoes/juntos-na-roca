@@ -1,0 +1,531 @@
+[gd_scene load_steps=20 format=3]
+
+[ext_resource type="Script" path="res://scripts/telas/quadrinhos.gd" id="1_script"]
+[ext_resource type="Theme" path="res://assets/tema/tema_telas.tres" id="2_tema"]
+[ext_resource type="Texture2D" path="res://assets/SuperRetroWorld_Farming/Props/Houses/Sprites/house_01.png" id="3_casa"]
+[ext_resource type="Texture2D" path="res://assets/SuperRetroWorld_Farming/Props/Trees/Sprites/tree_04.png" id="4_arvore"]
+[ext_resource type="Texture2D" path="res://assets/SuperRetroWorld_Farming/Props/Trees/Sprites/tree_02.png" id="5_pinheiro"]
+[ext_resource type="Texture2D" path="res://assets/recortes/telas/grama.tres" id="6_grama"]
+[ext_resource type="Texture2D" path="res://assets/recortes/telas/tronco.tres" id="8_tronco"]
+[ext_resource type="Texture2D" path="res://assets/sprites/extras/gota.png" id="9_gota"]
+[ext_resource type="Texture2D" path="res://assets/sprites/extras/pixel.png" id="10_pixel"]
+[ext_resource type="Shader" path="res://assets/shaders/cinza.gdshader" id="11_cinza"]
+[ext_resource type="Texture2D" path="res://assets/sprites/personagens/p1_lado_parado.png" id="12_p1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/personagens/p2_lado_parado.png" id="13_p2"]
+[ext_resource type="Texture2D" path="res://assets/sprites/personagens/vovo_zefa.png" id="14_vovo"]
+[ext_resource type="Texture2D" path="res://assets/SuperRetroWorld_Farming/Props/Rocks/Sprites/rock_02.png" id="15_pedra"]
+[ext_resource type="PackedScene" path="res://cenas/objetos/tecla.tscn" id="16_tecla"]
+[ext_resource type="Texture2D" path="res://assets/SuperRetroWorld_Farming/Props/Crops/Sprites/crop_07.png" id="17_plantas"]
+
+[sub_resource type="ShaderMaterial" id="material_cinza"]
+shader = ExtResource("11_cinza")
+shader_parameter/cinza = 1.0
+
+[sub_resource type="Gradient" id="cores_confete"]
+offsets = PackedFloat32Array(0, 0.25, 0.5, 0.75, 1)
+colors = PackedColorArray(0.92, 0.54, 0.19, 1, 0.36, 0.55, 0.93, 1, 0.94, 0.78, 0.27, 1, 0.85, 0.24, 0.24, 1, 1, 1, 1, 1)
+
+[node name="Quadrinhos" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_tema")
+script = ExtResource("1_script")
+editor_description = "História em quadrinhos depois do prefácio. Cada quadro (Quadro1..4) é um Control com clip_contents: o que passa da borda não aparece. Os personagens são vestidos pelo Elenco (metadado 'personagem')."
+
+[node name="Papel" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.96, 0.91, 0.78, 1)
+editor_description = "O papel da página da revistinha."
+
+[node name="Quadro1" type="Control" parent="."]
+unique_name_in_owner = true
+clip_contents = true
+layout_mode = 0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 316.0
+offset_bottom = 160.0
+mouse_filter = 2
+editor_description = "Quadro 1: os netos chegam na casa da Vovó."
+
+[node name="Ceu" type="ColorRect" parent="Quadro1"]
+layout_mode = 0
+offset_right = 306.0
+offset_bottom = 150.0
+mouse_filter = 2
+color = Color(0.6, 0.84, 0.98, 1)
+
+[node name="Grama" type="TextureRect" parent="Quadro1"]
+layout_mode = 0
+offset_top = 108.0
+offset_right = 153.0
+offset_bottom = 129.0
+scale = Vector2(2, 2)
+mouse_filter = 2
+texture = ExtResource("6_grama")
+expand_mode = 1
+stretch_mode = 1
+
+[node name="Arvore" type="Sprite2D" parent="Quadro1"]
+position = Vector2(34, 88)
+scale = Vector2(1.6, 1.6)
+texture = ExtResource("4_arvore")
+
+[node name="Casa" type="Sprite2D" parent="Quadro1"]
+position = Vector2(222, 74)
+scale = Vector2(2, 2)
+texture = ExtResource("3_casa")
+
+[node name="Vovo" type="Sprite2D" parent="Quadro1"]
+position = Vector2(230, 142)
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("14_vovo")
+metadata/personagem = "vovo"
+
+[node name="Neto1" type="Sprite2D" parent="Quadro1"]
+position = Vector2(76, 144)
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("12_p1")
+metadata/personagem = "neto1"
+metadata/pose = "lado"
+
+[node name="Neto2" type="Sprite2D" parent="Quadro1"]
+position = Vector2(112, 144)
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("13_p2")
+metadata/personagem = "neto2"
+metadata/pose = "lado"
+
+[node name="Balao" type="PanelContainer" parent="Quadro1"]
+layout_mode = 0
+offset_left = 56.0
+offset_top = 34.0
+offset_right = 136.0
+offset_bottom = 60.0
+theme_type_variation = &"Balao"
+
+[node name="Fala" type="Label" parent="Quadro1/Balao"]
+layout_mode = 2
+theme_type_variation = &"TextoEscuro"
+theme_override_font_sizes/font_size = 13
+text = "Oi, Vovó!"
+horizontal_alignment = 1
+
+[node name="RaboContorno" type="Polygon2D" parent="Quadro1"]
+color = Color(0.12, 0.08, 0.06, 1)
+polygon = PackedVector2Array(84, 57, 98, 57, 92, 74)
+
+[node name="Rabo" type="Polygon2D" parent="Quadro1"]
+polygon = PackedVector2Array(86, 56, 96, 56, 92, 70)
+
+[node name="Legenda" type="PanelContainer" parent="Quadro1"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 110.0
+offset_bottom = 22.0
+theme_type_variation = &"Legenda"
+
+[node name="Texto" type="Label" parent="Quadro1/Legenda"]
+layout_mode = 2
+theme_type_variation = &"TextoEscuro"
+text = "Férias na roça!"
+
+[node name="Borda" type="Panel" parent="Quadro1"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"QuadroHQ"
+
+[node name="Quadro2" type="Control" parent="."]
+unique_name_in_owner = true
+clip_contents = true
+layout_mode = 0
+offset_left = 324.0
+offset_top = 10.0
+offset_right = 630.0
+offset_bottom = 160.0
+mouse_filter = 2
+editor_description = "Quadro 2: a Vovó mostra a fazenda sem cor. O retângulo Cinza usa o shader cinza.gdshader, que deixa cinza tudo o que está desenhado embaixo dele. A Vovó vem depois na árvore, então fica colorida."
+
+[node name="Ceu" type="ColorRect" parent="Quadro2"]
+layout_mode = 0
+offset_right = 306.0
+offset_bottom = 150.0
+mouse_filter = 2
+color = Color(0.6, 0.84, 0.98, 1)
+
+[node name="Grama" type="TextureRect" parent="Quadro2"]
+layout_mode = 0
+offset_top = 108.0
+offset_right = 153.0
+offset_bottom = 129.0
+scale = Vector2(2, 2)
+mouse_filter = 2
+texture = ExtResource("6_grama")
+expand_mode = 1
+stretch_mode = 1
+
+[node name="Arvore" type="Sprite2D" parent="Quadro2"]
+position = Vector2(46, 76)
+scale = Vector2(1.6, 1.6)
+texture = ExtResource("4_arvore")
+
+[node name="Pinheiro" type="Sprite2D" parent="Quadro2"]
+position = Vector2(126, 72)
+scale = Vector2(1.6, 1.6)
+texture = ExtResource("5_pinheiro")
+
+[node name="Planta1" type="Sprite2D" parent="Quadro2"]
+position = Vector2(30, 114)
+scale = Vector2(2, 2)
+texture = ExtResource("17_plantas")
+region_enabled = true
+region_rect = Rect2(90, 0, 18, 32)
+
+[node name="Planta2" type="Sprite2D" parent="Quadro2"]
+position = Vector2(66, 114)
+scale = Vector2(2, 2)
+texture = ExtResource("17_plantas")
+region_enabled = true
+region_rect = Rect2(90, 0, 18, 32)
+
+[node name="Planta3" type="Sprite2D" parent="Quadro2"]
+position = Vector2(102, 114)
+scale = Vector2(2, 2)
+texture = ExtResource("17_plantas")
+region_enabled = true
+region_rect = Rect2(90, 0, 18, 32)
+
+[node name="Planta4" type="Sprite2D" parent="Quadro2"]
+position = Vector2(138, 114)
+scale = Vector2(2, 2)
+texture = ExtResource("17_plantas")
+region_enabled = true
+region_rect = Rect2(90, 0, 18, 32)
+
+[node name="Pedra" type="Sprite2D" parent="Quadro2"]
+position = Vector2(176, 134)
+scale = Vector2(2, 2)
+texture = ExtResource("15_pedra")
+
+[node name="Cinza" type="ColorRect" parent="Quadro2"]
+material = SubResource("material_cinza")
+layout_mode = 0
+offset_right = 306.0
+offset_bottom = 150.0
+mouse_filter = 2
+
+[node name="Vovo" type="Sprite2D" parent="Quadro2"]
+position = Vector2(256, 142)
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("14_vovo")
+metadata/personagem = "vovo"
+
+[node name="Balao" type="PanelContainer" parent="Quadro2"]
+layout_mode = 0
+offset_left = 140.0
+offset_top = 12.0
+offset_right = 296.0
+offset_bottom = 54.0
+theme_type_variation = &"Balao"
+
+[node name="Fala" type="Label" parent="Quadro2/Balao"]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+theme_type_variation = &"TextoEscuro"
+theme_override_font_sizes/font_size = 13
+text = "A fazenda perdeu as cores!"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="RaboContorno" type="Polygon2D" parent="Quadro2"]
+color = Color(0.12, 0.08, 0.06, 1)
+polygon = PackedVector2Array(232, 50, 248, 50, 254, 76)
+
+[node name="Rabo" type="Polygon2D" parent="Quadro2"]
+polygon = PackedVector2Array(234, 49, 246, 49, 252, 72)
+
+[node name="Borda" type="Panel" parent="Quadro2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"QuadroHQ"
+
+[node name="Quadro3" type="Control" parent="."]
+unique_name_in_owner = true
+clip_contents = true
+layout_mode = 0
+offset_left = 10.0
+offset_top = 168.0
+offset_right = 316.0
+offset_bottom = 318.0
+mouse_filter = 2
+editor_description = "Quadro 3, dividido em dois: à esquerda um neto sozinho não consegue com o tronco; à direita os dois levantam juntos."
+
+[node name="Ceu" type="ColorRect" parent="Quadro3"]
+layout_mode = 0
+offset_right = 306.0
+offset_bottom = 150.0
+mouse_filter = 2
+color = Color(0.6, 0.84, 0.98, 1)
+
+[node name="Grama" type="TextureRect" parent="Quadro3"]
+layout_mode = 0
+offset_top = 108.0
+offset_right = 153.0
+offset_bottom = 129.0
+scale = Vector2(2, 2)
+mouse_filter = 2
+texture = ExtResource("6_grama")
+expand_mode = 1
+stretch_mode = 1
+
+[node name="TroncoSozinho" type="Sprite2D" parent="Quadro3"]
+position = Vector2(92, 134)
+scale = Vector2(2, 2)
+texture = ExtResource("8_tronco")
+
+[node name="NetoSozinho" type="Sprite2D" parent="Quadro3"]
+position = Vector2(34, 146)
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("12_p1")
+metadata/personagem = "neto1"
+metadata/pose = "lado"
+
+[node name="Suor" type="Sprite2D" parent="Quadro3"]
+position = Vector2(52, 82)
+texture = ExtResource("9_gota")
+
+[node name="Legenda" type="PanelContainer" parent="Quadro3"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 130.0
+offset_bottom = 22.0
+theme_type_variation = &"Legenda"
+
+[node name="Texto" type="Label" parent="Quadro3/Legenda"]
+layout_mode = 2
+theme_type_variation = &"TextoEscuro"
+text = "Sozinho não dá..."
+
+[node name="Divisao" type="ColorRect" parent="Quadro3"]
+layout_mode = 0
+offset_left = 151.0
+offset_right = 155.0
+offset_bottom = 150.0
+mouse_filter = 2
+color = Color(0.1, 0.07, 0.05, 1)
+
+[node name="TroncoJuntos" type="Sprite2D" parent="Quadro3"]
+position = Vector2(230, 90)
+scale = Vector2(2, 2)
+texture = ExtResource("8_tronco")
+
+[node name="NetoA" type="Sprite2D" parent="Quadro3"]
+position = Vector2(196, 146)
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("12_p1")
+metadata/personagem = "neto1"
+metadata/pose = "lado"
+
+[node name="NetoB" type="Sprite2D" parent="Quadro3"]
+position = Vector2(266, 146)
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("13_p2")
+flip_h = true
+metadata/personagem = "neto2"
+metadata/pose = "lado"
+
+[node name="Balao" type="PanelContainer" parent="Quadro3"]
+layout_mode = 0
+offset_left = 172.0
+offset_top = 8.0
+offset_right = 290.0
+offset_bottom = 34.0
+theme_type_variation = &"Balao"
+
+[node name="Fala" type="Label" parent="Quadro3/Balao"]
+layout_mode = 2
+theme_type_variation = &"TextoEscuro"
+theme_override_font_sizes/font_size = 13
+text = "Juntos, sim!"
+horizontal_alignment = 1
+
+[node name="Borda" type="Panel" parent="Quadro3"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"QuadroHQ"
+
+[node name="Quadro4" type="Control" parent="."]
+unique_name_in_owner = true
+clip_contents = true
+layout_mode = 0
+offset_left = 324.0
+offset_top = 168.0
+offset_right = 630.0
+offset_bottom = 318.0
+mouse_filter = 2
+editor_description = "Quadro 4: toca aqui! O script faz os dois pularem e bate o PÁ! sem parar."
+
+[node name="Ceu" type="ColorRect" parent="Quadro4"]
+layout_mode = 0
+offset_right = 306.0
+offset_bottom = 150.0
+mouse_filter = 2
+color = Color(0.6, 0.84, 0.98, 1)
+
+[node name="Grama" type="TextureRect" parent="Quadro4"]
+layout_mode = 0
+offset_top = 108.0
+offset_right = 153.0
+offset_bottom = 129.0
+scale = Vector2(2, 2)
+mouse_filter = 2
+texture = ExtResource("6_grama")
+expand_mode = 1
+stretch_mode = 1
+
+[node name="Arvore" type="Sprite2D" parent="Quadro4"]
+position = Vector2(34, 86)
+scale = Vector2(1.6, 1.6)
+texture = ExtResource("4_arvore")
+
+[node name="Casa" type="Sprite2D" parent="Quadro4"]
+position = Vector2(256, 86)
+scale = Vector2(1.4, 1.4)
+texture = ExtResource("3_casa")
+
+[node name="PuloA" type="Sprite2D" parent="Quadro4"]
+unique_name_in_owner = true
+position = Vector2(118, 144)
+scale = Vector2(3, 3)
+texture = ExtResource("12_p1")
+metadata/personagem = "neto1"
+metadata/pose = "lado"
+
+[node name="PuloB" type="Sprite2D" parent="Quadro4"]
+unique_name_in_owner = true
+position = Vector2(188, 144)
+scale = Vector2(3, 3)
+texture = ExtResource("13_p2")
+flip_h = true
+metadata/personagem = "neto2"
+metadata/pose = "lado"
+
+[node name="Pa" type="Label" parent="Quadro4"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 103.0
+offset_top = 20.0
+offset_right = 203.0
+offset_bottom = 54.0
+pivot_offset = Vector2(50, 17)
+theme_override_colors/font_color = Color(1, 0.9, 0.35, 1)
+theme_override_constants/outline_size = 8
+theme_override_font_sizes/font_size = 28
+text = "PÁ!"
+horizontal_alignment = 1
+
+[node name="Confete" type="CPUParticles2D" parent="Quadro4"]
+unique_name_in_owner = true
+position = Vector2(153, 30)
+emitting = false
+amount = 40
+lifetime = 2.0
+texture = ExtResource("10_pixel")
+emission_shape = 3
+emission_rect_extents = Vector2(120, 4)
+direction = Vector2(0, 1)
+spread = 30.0
+gravity = Vector2(0, 60)
+initial_velocity_min = 20.0
+initial_velocity_max = 60.0
+scale_amount_min = 1.5
+scale_amount_max = 2.5
+color_initial_ramp = SubResource("cores_confete")
+
+[node name="Legenda" type="PanelContainer" parent="Quadro4"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 104.0
+offset_bottom = 22.0
+theme_type_variation = &"Legenda"
+
+[node name="Texto" type="Label" parent="Quadro4/Legenda"]
+layout_mode = 2
+theme_type_variation = &"TextoEscuro"
+text = "Vamos juntos!"
+
+[node name="Borda" type="Panel" parent="Quadro4"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"QuadroHQ"
+
+[node name="Rodape" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_top = 326.0
+offset_right = 640.0
+offset_bottom = 352.0
+alignment = 1
+theme_override_constants/separation = 5
+
+[node name="Espaco" parent="Rodape" instance=ExtResource("16_tecla")]
+custom_minimum_size = Vector2(44, 20)
+layout_mode = 2
+size_flags_vertical = 4
+texto = "Espaço"
+
+[node name="Enter" parent="Rodape" instance=ExtResource("16_tecla")]
+custom_minimum_size = Vector2(36, 20)
+layout_mode = 2
+size_flags_vertical = 4
+texto = "Enter"
+
+[node name="Proximo" type="Label" parent="Rodape"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "próximo"
+
+[node name="Esc" parent="Rodape" instance=ExtResource("16_tecla")]
+custom_minimum_size = Vector2(28, 20)
+layout_mode = 2
+size_flags_vertical = 4
+texto = "Esc"
+
+[node name="Pular" type="Label" parent="Rodape"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "pular"

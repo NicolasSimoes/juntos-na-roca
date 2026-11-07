@@ -1,0 +1,355 @@
+[gd_scene load_steps=14 format=3]
+
+[ext_resource type="Script" path="res://scripts/telas/como_jogar.gd" id="1_script"]
+[ext_resource type="Theme" path="res://assets/tema/tema_telas.tres" id="2_tema"]
+[ext_resource type="PackedScene" path="res://cenas/objetos/teclas_jogador.tscn" id="3_teclas"]
+[ext_resource type="PackedScene" path="res://cenas/objetos/tecla.tscn" id="4_tecla"]
+[ext_resource type="Texture2D" path="res://assets/sprites/personagens/p1_baixo_parado.png" id="5_p1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/personagens/p2_baixo_parado.png" id="6_p2"]
+[ext_resource type="Texture2D" path="res://assets/sprites/personagens/vovo_zefa.png" id="7_vovo"]
+[ext_resource type="Texture2D" path="res://assets/sprites/extras/seta.png" id="8_seta"]
+[ext_resource type="Texture2D" path="res://assets/sprites/objetos/poco.png" id="9_poco"]
+[ext_resource type="Texture2D" path="res://assets/sprites/personagens/p1_lado_parado.png" id="10_p1l"]
+[ext_resource type="Texture2D" path="res://assets/sprites/personagens/p2_lado_parado.png" id="11_p2l"]
+
+[sub_resource type="StyleBoxFlat" id="circulo_laranja"]
+bg_color = Color(1, 1, 1, 0.5)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.92, 0.54, 0.19, 1)
+corner_radius_top_left = 99
+corner_radius_top_right = 99
+corner_radius_bottom_right = 99
+corner_radius_bottom_left = 99
+
+[sub_resource type="StyleBoxFlat" id="circulo_azul"]
+bg_color = Color(1, 1, 1, 0.5)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.36, 0.55, 0.93, 1)
+corner_radius_top_left = 99
+corner_radius_top_right = 99
+corner_radius_bottom_right = 99
+corner_radius_bottom_left = 99
+
+[node name="ComoJogar" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_tema")
+script = ExtResource("1_script")
+editor_description = "Como jogar, quase sem texto: as teclas de cada jogador (que se apertam sozinhas) e 4 cartões com as regras. Abre por cima do menu."
+
+[node name="Escuro" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.02, 0.03, 0.1, 0.9)
+
+[node name="Titulo" type="Label" parent="."]
+layout_mode = 0
+offset_top = 6.0
+offset_right = 640.0
+offset_bottom = 38.0
+theme_type_variation = &"Titulo"
+text = "Como jogar"
+horizontal_alignment = 1
+
+[node name="Jogador1" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = 40.0
+offset_top = 42.0
+offset_right = 310.0
+offset_bottom = 166.0
+theme_type_variation = &"Cartao"
+
+[node name="Linha" type="HBoxContainer" parent="Jogador1"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 14
+
+[node name="Neto" type="TextureRect" parent="Jogador1/Linha"]
+custom_minimum_size = Vector2(48, 72)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("5_p1")
+expand_mode = 1
+stretch_mode = 5
+metadata/personagem = "neto1"
+metadata/pose = "frente"
+
+[node name="Coluna" type="VBoxContainer" parent="Jogador1/Linha"]
+layout_mode = 2
+alignment = 1
+
+[node name="Nome" type="Label" parent="Jogador1/Linha/Coluna"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.62, 0.25, 1)
+theme_override_font_sizes/font_size = 14
+text = "Jogador 1"
+horizontal_alignment = 1
+
+[node name="Teclas" parent="Jogador1/Linha/Coluna" instance=ExtResource("3_teclas")]
+layout_mode = 2
+animar = true
+
+[node name="Jogador2" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = 330.0
+offset_top = 42.0
+offset_right = 600.0
+offset_bottom = 166.0
+theme_type_variation = &"Cartao"
+
+[node name="Linha" type="HBoxContainer" parent="Jogador2"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 14
+
+[node name="Neto" type="TextureRect" parent="Jogador2/Linha"]
+custom_minimum_size = Vector2(48, 72)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("6_p2")
+expand_mode = 1
+stretch_mode = 5
+metadata/personagem = "neto2"
+metadata/pose = "frente"
+
+[node name="Coluna" type="VBoxContainer" parent="Jogador2/Linha"]
+layout_mode = 2
+alignment = 1
+
+[node name="Nome" type="Label" parent="Jogador2/Linha/Coluna"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.55, 0.72, 1, 1)
+theme_override_font_sizes/font_size = 14
+text = "Jogador 2"
+horizontal_alignment = 1
+
+[node name="Teclas" parent="Jogador2/Linha/Coluna" instance=ExtResource("3_teclas")]
+layout_mode = 2
+numero = 2
+animar = true
+
+[node name="Cartoes" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 176.0
+offset_right = 616.0
+offset_bottom = 320.0
+theme_override_constants/separation = 10
+
+[node name="Circulos" type="PanelContainer" parent="Cartoes"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"Cartao"
+
+[node name="Coluna" type="VBoxContainer" parent="Cartoes/Circulos"]
+layout_mode = 2
+
+[node name="Ilustracao" type="Control" parent="Cartoes/Circulos/Coluna"]
+clip_contents = true
+custom_minimum_size = Vector2(124, 92)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="CirculoA" type="Panel" parent="Cartoes/Circulos/Coluna/Ilustracao"]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 70.0
+offset_right = 52.0
+offset_bottom = 84.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("circulo_laranja")
+
+[node name="CirculoB" type="Panel" parent="Cartoes/Circulos/Coluna/Ilustracao"]
+layout_mode = 0
+offset_left = 72.0
+offset_top = 70.0
+offset_right = 104.0
+offset_bottom = 84.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("circulo_azul")
+
+[node name="NetoA" type="Sprite2D" parent="Cartoes/Circulos/Coluna/Ilustracao"]
+position = Vector2(36, 78)
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("5_p1")
+metadata/personagem = "neto1"
+metadata/pose = "frente"
+
+[node name="NetoB" type="Sprite2D" parent="Cartoes/Circulos/Coluna/Ilustracao"]
+position = Vector2(88, 78)
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("6_p2")
+metadata/personagem = "neto2"
+metadata/pose = "frente"
+
+[node name="Texto" type="Label" parent="Cartoes/Circulos/Coluna"]
+layout_mode = 2
+theme_type_variation = &"TextoEscuro"
+text = "Um em cada círculo"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Seta" type="PanelContainer" parent="Cartoes"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"Cartao"
+
+[node name="Coluna" type="VBoxContainer" parent="Cartoes/Seta"]
+layout_mode = 2
+
+[node name="Ilustracao" type="Control" parent="Cartoes/Seta/Coluna"]
+clip_contents = true
+custom_minimum_size = Vector2(124, 92)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Poco" type="Sprite2D" parent="Cartoes/Seta/Coluna/Ilustracao"]
+position = Vector2(62, 66)
+scale = Vector2(3, 3)
+texture = ExtResource("9_poco")
+
+[node name="SetaGuia" type="Sprite2D" parent="Cartoes/Seta/Coluna/Ilustracao"]
+unique_name_in_owner = true
+position = Vector2(62, 20)
+scale = Vector2(2, 2)
+texture = ExtResource("8_seta")
+
+[node name="Texto" type="Label" parent="Cartoes/Seta/Coluna"]
+layout_mode = 2
+theme_type_variation = &"TextoEscuro"
+text = "Siga a seta"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="TocaAqui" type="PanelContainer" parent="Cartoes"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"Cartao"
+
+[node name="Coluna" type="VBoxContainer" parent="Cartoes/TocaAqui"]
+layout_mode = 2
+
+[node name="Ilustracao" type="Control" parent="Cartoes/TocaAqui/Coluna"]
+clip_contents = true
+custom_minimum_size = Vector2(124, 92)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="ToqueA" type="Sprite2D" parent="Cartoes/TocaAqui/Coluna/Ilustracao"]
+unique_name_in_owner = true
+position = Vector2(46, 88)
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("10_p1l")
+metadata/personagem = "neto1"
+metadata/pose = "lado"
+
+[node name="ToqueB" type="Sprite2D" parent="Cartoes/TocaAqui/Coluna/Ilustracao"]
+unique_name_in_owner = true
+position = Vector2(80, 88)
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("11_p2l")
+flip_h = true
+metadata/personagem = "neto2"
+metadata/pose = "lado"
+
+[node name="Pa" type="Label" parent="Cartoes/TocaAqui/Coluna/Ilustracao"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 32.0
+offset_top = 2.0
+offset_right = 92.0
+offset_bottom = 28.0
+pivot_offset = Vector2(30, 13)
+theme_override_colors/font_color = Color(1, 0.9, 0.35, 1)
+theme_override_font_sizes/font_size = 20
+text = "PÁ!"
+horizontal_alignment = 1
+
+[node name="Texto" type="Label" parent="Cartoes/TocaAqui/Coluna"]
+layout_mode = 2
+theme_type_variation = &"TextoEscuro"
+text = "Toca aqui!"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Errou" type="PanelContainer" parent="Cartoes"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"Cartao"
+
+[node name="Coluna" type="VBoxContainer" parent="Cartoes/Errou"]
+layout_mode = 2
+
+[node name="Ilustracao" type="Control" parent="Cartoes/Errou/Coluna"]
+clip_contents = true
+custom_minimum_size = Vector2(124, 92)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Vovo" type="Sprite2D" parent="Cartoes/Errou/Coluna/Ilustracao"]
+position = Vector2(34, 88)
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("7_vovo")
+metadata/personagem = "vovo"
+
+[node name="Balao" type="PanelContainer" parent="Cartoes/Errou/Coluna/Ilustracao"]
+layout_mode = 0
+offset_left = 54.0
+offset_top = 14.0
+offset_right = 122.0
+offset_bottom = 38.0
+theme_type_variation = &"Balao"
+
+[node name="Fala" type="Label" parent="Cartoes/Errou/Coluna/Ilustracao/Balao"]
+layout_mode = 2
+theme_type_variation = &"TextoEscuro"
+theme_override_font_sizes/font_size = 10
+text = "Tudo bem!"
+horizontal_alignment = 1
+
+[node name="Texto" type="Label" parent="Cartoes/Errou/Coluna"]
+layout_mode = 2
+theme_type_variation = &"TextoEscuro"
+text = "Errou? Tente de novo!"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Rodape" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_top = 328.0
+offset_right = 640.0
+offset_bottom = 352.0
+alignment = 1
+theme_override_constants/separation = 5
+
+[node name="Espaco" parent="Rodape" instance=ExtResource("4_tecla")]
+custom_minimum_size = Vector2(44, 20)
+layout_mode = 2
+size_flags_vertical = 4
+texto = "Espaço"
+
+[node name="Enter" parent="Rodape" instance=ExtResource("4_tecla")]
+custom_minimum_size = Vector2(36, 20)
+layout_mode = 2
+size_flags_vertical = 4
+texto = "Enter"
+
+[node name="Voltar" type="Label" parent="Rodape"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "voltar"

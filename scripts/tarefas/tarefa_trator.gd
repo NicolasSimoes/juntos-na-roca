@@ -4,7 +4,7 @@ extends Tarefa
 
 
 func _init() -> void:
-	dica = "Quem acelera SEGURA o botão. Quem empurra APERTA várias vezes. Os dois juntos!"
+	dica = "Um SEGURA o botão. O outro aperta muito!"
 
 
 func posicao_estacao() -> Vector2:

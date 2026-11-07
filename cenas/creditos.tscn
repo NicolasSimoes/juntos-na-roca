@@ -1,0 +1,228 @@
+[gd_scene load_steps=10 format=3]
+
+[ext_resource type="Script" path="res://scripts/telas/creditos.gd" id="1_script"]
+[ext_resource type="Theme" path="res://assets/tema/tema_telas.tres" id="2_tema"]
+[ext_resource type="Texture2D" path="res://assets/SuperRetroWorld_Farming/Props/Trees/Sprites/tree_04.png" id="3_arvore"]
+[ext_resource type="Texture2D" path="res://assets/SuperRetroWorld_Farming/Props/Trees/Sprites/tree_11.png" id="4_arvore2"]
+[ext_resource type="Texture2D" path="res://assets/sprites/personagens/p1_baixo_parado.png" id="5_p1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/personagens/p2_baixo_parado.png" id="6_p2"]
+[ext_resource type="Texture2D" path="res://assets/sprites/personagens/vovo_zefa.png" id="7_vovo"]
+[ext_resource type="PackedScene" path="res://cenas/objetos/tecla.tscn" id="8_tecla"]
+[ext_resource type="Texture2D" path="res://assets/recortes/telas/grama.tres" id="9_grama"]
+
+[node name="Creditos" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_tema")
+script = ExtResource("1_script")
+editor_description = "Créditos que sobem devagar. Os nomes da equipe vêm de Textos.CREDITOS_EQUIPE."
+
+[node name="Escuro" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.03, 0.04, 0.12, 0.97)
+
+[node name="Rolo" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 120.0
+offset_top = 360.0
+offset_right = 520.0
+offset_bottom = 760.0
+theme_override_constants/separation = 8
+editor_description = "Tudo o que sobe. O script move a posição y para cima a cada quadro."
+
+[node name="Jogo" type="Label" parent="Rolo"]
+layout_mode = 2
+theme_type_variation = &"Titulo"
+theme_override_font_sizes/font_size = 30
+text = "Juntos na Roça"
+horizontal_alignment = 1
+
+[node name="Sub" type="Label" parent="Rolo"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "um jogo para fazer em dupla"
+horizontal_alignment = 1
+
+[node name="Espaco1" type="Control" parent="Rolo"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+
+[node name="TituloEquipe" type="Label" parent="Rolo"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.86, 0.35, 1)
+theme_override_font_sizes/font_size = 13
+text = "Equipe AmendoBobos"
+horizontal_alignment = 1
+
+[node name="Equipe" type="VBoxContainer" parent="Rolo"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="Espaco2" type="Control" parent="Rolo"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="TituloDisciplina" type="Label" parent="Rolo"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.86, 0.35, 1)
+theme_override_font_sizes/font_size = 13
+text = "Disciplina"
+horizontal_alignment = 1
+
+[node name="Disciplina" type="Label" parent="Rolo"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Protótipos — Unifor"
+horizontal_alignment = 1
+
+[node name="Espaco3" type="Control" parent="Rolo"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="TituloArte" type="Label" parent="Rolo"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.86, 0.35, 1)
+theme_override_font_sizes/font_size = 13
+text = "Arte"
+horizontal_alignment = 1
+
+[node name="Arte" type="Label" parent="Rolo"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Super Retro World – Farming, por Gif"
+horizontal_alignment = 1
+
+[node name="ArteGrupo" type="Label" parent="Rolo"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "Personagens extras, sons e músicas: feitos pelo grupo"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Espaco4" type="Control" parent="Rolo"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="TituloFontes" type="Label" parent="Rolo"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.86, 0.35, 1)
+theme_override_font_sizes/font_size = 13
+text = "Fontes"
+horizontal_alignment = 1
+
+[node name="Fontes" type="Label" parent="Rolo"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Cinzel Decorative e Pixelify Sans"
+horizontal_alignment = 1
+
+[node name="Licenca" type="Label" parent="Rolo"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "licença SIL Open Font License"
+horizontal_alignment = 1
+
+[node name="Espaco5" type="Control" parent="Rolo"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+
+[node name="TituloMotor" type="Label" parent="Rolo"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.86, 0.35, 1)
+theme_override_font_sizes/font_size = 13
+text = "Feito com"
+horizontal_alignment = 1
+
+[node name="Motor" type="Label" parent="Rolo"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Godot Engine"
+horizontal_alignment = 1
+
+[node name="Espaco6" type="Control" parent="Rolo"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+
+[node name="Obrigado" type="Label" parent="Rolo"]
+layout_mode = 2
+theme_type_variation = &"Titulo"
+theme_override_font_sizes/font_size = 20
+text = "Obrigado por jogar!"
+horizontal_alignment = 1
+
+[node name="Licao" type="Label" parent="Rolo"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Na roça, ninguém faz nada sozinho."
+horizontal_alignment = 1
+
+[node name="Grama" type="TextureRect" parent="."]
+layout_mode = 0
+offset_top = 330.0
+offset_right = 320.0
+offset_bottom = 345.0
+scale = Vector2(2, 2)
+mouse_filter = 2
+texture = ExtResource("9_grama")
+expand_mode = 1
+stretch_mode = 1
+
+[node name="ArvoreEsquerda" type="Sprite2D" parent="."]
+position = Vector2(48, 296)
+scale = Vector2(2, 2)
+texture = ExtResource("3_arvore")
+
+[node name="ArvoreDireita" type="Sprite2D" parent="."]
+position = Vector2(594, 296)
+scale = Vector2(2, 2)
+texture = ExtResource("4_arvore2")
+
+[node name="Neto1" type="Sprite2D" parent="."]
+position = Vector2(110, 340)
+scale = Vector2(2, 2)
+texture = ExtResource("5_p1")
+metadata/personagem = "neto1"
+
+[node name="Vovo" type="Sprite2D" parent="."]
+position = Vector2(518, 340)
+scale = Vector2(2, 2)
+texture = ExtResource("7_vovo")
+metadata/personagem = "vovo"
+
+[node name="Neto2" type="Sprite2D" parent="."]
+position = Vector2(140, 340)
+scale = Vector2(2, 2)
+texture = ExtResource("6_p2")
+metadata/personagem = "neto2"
+
+[node name="Voltar" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 500.0
+offset_top = 6.0
+offset_right = 634.0
+offset_bottom = 28.0
+alignment = 2
+theme_override_constants/separation = 4
+
+[node name="Espaco" parent="Voltar" instance=ExtResource("8_tecla")]
+custom_minimum_size = Vector2(44, 20)
+layout_mode = 2
+size_flags_vertical = 4
+texto = "Espaço"
+
+[node name="Rotulo" type="Label" parent="Voltar"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "voltar"

@@ -9,7 +9,7 @@ var _entregues := {}
 
 
 func _init() -> void:
-	dica = "Um põe a tábua no espaço de mesmo formato. O outro bate o martelo quando o marcador passar no prego!"
+	dica = "Encaixem a tábua certa. Martelem no prego!"
 
 
 func posicao_estacao() -> Vector2:
@@ -39,9 +39,9 @@ func aguardando(_delta: float) -> void:
 			_entregues[item] = true
 			Sons.tocar("soltar")
 			if _entregues.size() < 2:
-				fazenda.hud.aviso("Falta " + ("a corda!" if item == "tabuas" else "as tábuas!"))
+				fazenda.hud.aviso(("Falta a corda!" if item == "tabuas" else "Faltam as tábuas!"))
 			else:
-				fazenda.hud.aviso("Tudo aqui! Os dois nos círculos.")
+				fazenda.hud.aviso("Tudo aqui! Um em cada círculo.")
 
 
 func ponto_guia() -> Variant:

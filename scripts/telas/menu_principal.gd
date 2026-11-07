@@ -2,9 +2,16 @@ extends Control
 ## Menu principal, no estilo dos Zelda antigos: título dourado com brilho,
 ## "Aperte AÇÃO", e uma caixa com borda dourada e um vaga-lume de cursor.
 ## Os dois jogadores podem mexer no menu.
+## "Como jogar" e "Créditos" são cenas próprias (cenas/como_jogar.tscn e
+## cenas/creditos.tscn) que abrem por cima do menu e avisam quando fecham.
 
-const OPCOES := ["Começar", "Prefácio", "Como jogar", "Créditos"]
-const CAIXA := Rect2(92, 178, 228, 124)
+const OPCOES := ["Jogar", "Como jogar", "Créditos"]
+const CAIXA := Rect2(92, 186, 228, 98)
+const CENA_TECLA := preload("res://cenas/objetos/tecla.tscn")
+const PAINEIS := {
+	"Como jogar": preload("res://cenas/como_jogar.tscn"),
+	"Créditos": preload("res://cenas/creditos.tscn"),
+}
 
 var _estado := "titulo"        # titulo, menu, painel, saindo
 var _escolha := 0
@@ -14,7 +21,7 @@ var _paisagem: Paisagem
 var _logo: Label
 var _logo_mat: ShaderMaterial
 var _sub: Label
-var _aperte: Label
+var _aperte: Control
 var _camada_menu: Control
 var _rotulos: Array[Label] = []
 var _painel: Control
@@ -30,10 +37,10 @@ func _ready() -> void:
 	_paisagem = Paisagem.new()
 	add_child(_paisagem)
 	_montar_logo()
-	_aperte = Fontes.rotulo("Aperte Espaço ou Enter", Fontes.pixel(700), 14, Color(1, 0.97, 0.85), 4, Color(0.2, 0.1, 0.05))
-	_aperte.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	# "Aperte [Espaço] ou [Enter]" com as teclas desenhadas
+	_aperte = _linha_de_teclas([["texto", "Aperte"], ["tecla", "Espaço", 50], ["texto", "ou"], ["tecla", "Enter", 40]], 14)
 	_aperte.position = Vector2(0, 140)
-	_aperte.size = Vector2(640, 20)
+	_aperte.size = Vector2(640, 24)
 	add_child(_aperte)
 	var rodape := Fontes.rotulo("Grupo AmendoBobos  ·  2026", Fontes.pixel(), 9, Color(1, 1, 1, 0.85), 3, Color(0.1, 0.1, 0.15))
 	rodape.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -79,15 +86,40 @@ func _montar_menu() -> void:
 	_camada_menu.modulate.a = 0.0
 	add_child(_camada_menu)
 	for i in OPCOES.size():
-		var l := Fontes.rotulo(OPCOES[i], Fontes.pixel(700), 16, Color.WHITE, 3, Color(0.05, 0.05, 0.12))
+		var l := Fontes.rotulo(OPCOES[i], Fontes.pixel(500), 17, Color.WHITE, 3, Color(0.05, 0.05, 0.12))
 		l.position = Vector2(CAIXA.position.x + 62, CAIXA.position.y + 14 + i * 26)
 		_camada_menu.add_child(l)
 		_rotulos.append(l)
-	var dica := Fontes.rotulo("Setas ou W/S para escolher  ·  AÇÃO para confirmar", Fontes.pixel(), 9, Color(1, 1, 1, 0.9), 3, Color(0.05, 0.05, 0.12))
-	dica.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	dica.position = Vector2(CAIXA.position.x - 80, CAIXA.end.y + 8)
-	dica.size = Vector2(CAIXA.size.x + 160, 14)
+	var dica := _linha_de_teclas([["seta", "cima"], ["seta", "baixo"], ["texto", "escolher"],
+			["tecla", "Espaço", 44], ["tecla", "Enter", 36], ["texto", "entrar"]], 10)
+	dica.position = Vector2(0, CAIXA.end.y + 8)
+	dica.size = Vector2(412, 22)
 	_camada_menu.add_child(dica)
+
+
+## Uma linha centralizada misturando texto e teclas desenhadas.
+## itens: ["texto", "palavra"], ["tecla", "Espaço", largura] ou ["seta", "cima"].
+func _linha_de_teclas(itens: Array, tamanho: int) -> HBoxContainer:
+	var linha := HBoxContainer.new()
+	linha.alignment = BoxContainer.ALIGNMENT_CENTER
+	linha.add_theme_constant_override("separation", 5)
+	linha.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	for item in itens:
+		match item[0]:
+			"texto":
+				var l := Fontes.rotulo(item[1], Fontes.pixel(500), tamanho, Color(1, 0.97, 0.85), 4, Color(0.2, 0.1, 0.05))
+				linha.add_child(l)
+			"tecla", "seta":
+				var t: Tecla = CENA_TECLA.instantiate()
+				if item[0] == "tecla":
+					t.texto = item[1]
+					t.custom_minimum_size = Vector2(item[2], 20)
+				else:
+					t.texto = ""
+					t.seta = item[1]
+				t.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+				linha.add_child(t)
+	return linha
 
 
 # ------------------------------------------------------------------ cada quadro
@@ -108,8 +140,7 @@ func _process(delta: float) -> void:
 		"menu":
 			_navegar()
 		"painel":
-			if _tempo_estado > 0.3 and (Jogo.apertou(1) or Jogo.apertou(2) or Input.is_action_just_pressed("pausa")):
-				_fechar_painel()
+			pass   # a cena aberta cuida dos botões e avisa com o sinal "fechou"
 	var alvo := CAIXA.position.y + 24.0 + _escolha * 26.0
 	_cursor_y = lerpf(_cursor_y, alvo, minf(1.0, delta * 16.0))
 	for r in _rastro:
@@ -163,29 +194,12 @@ func _navegar() -> void:
 func _escolher() -> void:
 	Sons.tocar("menu_ok")
 	match OPCOES[_escolha]:
-		"Começar":
+		"Jogar":
+			# Jogar: prefácio -> quadrinhos -> tela inicial -> fazenda
 			Jogo.prefacio_volta_ao_menu = false
 			_sair_para("res://cenas/prefacio.tscn")
-		"Prefácio":
-			Jogo.prefacio_volta_ao_menu = true
-			_sair_para("res://cenas/prefacio.tscn")
-		"Como jogar":
-			_abrir_painel("Como jogar", [
-				["Jogador 1 (laranja)", "Anda com W A S D e age com Espaço."],
-				["Jogador 2 (azul)", "Anda com as setas e age com Enter."],
-				["Os dois círculos", "Cada tarefa começa com um jogador em cada círculo. A borda colorida sugere quem faz o quê."],
-				["A setinha amarela", "Mostra para onde ir agora."],
-				["Toca aqui!", "No fim de cada tarefa, os dois apertam AÇÃO juntos para comemorar."],
-				["Errou?", "Sem problema: é só tentar de novo. A Vovó dá dicas."],
-			])
-		"Créditos":
-			_abrir_painel("Créditos", [
-				["Juntos na Roça", "Um jogo cooperativo para crianças do 3º ano."],
-				["Grupo AmendoBobos", "Disciplina de Protótipos."],
-				["Feito com", "Godot Engine 4."],
-				["Fontes", "Cinzel Decorative e Pixelify Sans (licença SIL OFL)."],
-				["Obrigado por jogar!", "Na roça, ninguém faz nada sozinho."],
-			])
+		"Como jogar", "Créditos":
+			_abrir_painel(PAINEIS[OPCOES[_escolha]])
 
 
 func _sair_para(cena: String) -> void:
@@ -202,63 +216,13 @@ func _sair_para(cena: String) -> void:
 
 
 # ------------------------------------------------------------------ painel (como jogar / créditos)
-func _abrir_painel(titulo: String, linhas: Array) -> void:
+## Abre uma cena por cima do menu. A cena emite "fechou" quando alguém sai dela.
+func _abrir_painel(cena: PackedScene) -> void:
 	_estado = "painel"
 	_tempo_estado = 0.0
-	_painel = Control.new()
-	_painel.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_painel = cena.instantiate()
 	add_child(_painel)
-	var escuro := ColorRect.new()
-	escuro.color = Color(0.02, 0.02, 0.08, 0.5)
-	escuro.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_painel.add_child(escuro)
-	var centro := CenterContainer.new()
-	centro.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_painel.add_child(centro)
-	var caixa := PanelContainer.new()
-	var estilo := StyleBoxFlat.new()
-	estilo.bg_color = Color(0.98, 0.93, 0.78)
-	estilo.border_color = Color(0.55, 0.36, 0.16)
-	estilo.set_border_width_all(4)
-	estilo.set_corner_radius_all(6)
-	estilo.content_margin_left = 18
-	estilo.content_margin_right = 18
-	estilo.content_margin_top = 10
-	estilo.content_margin_bottom = 10
-	estilo.shadow_color = Color(0, 0, 0, 0.35)
-	estilo.shadow_size = 6
-	caixa.add_theme_stylebox_override("panel", estilo)
-	centro.add_child(caixa)
-	var coluna := VBoxContainer.new()
-	coluna.add_theme_constant_override("separation", 6)
-	caixa.add_child(coluna)
-	var t := Fontes.rotulo(titulo, Fontes.titulo(), 22, Color(0.45, 0.25, 0.08))
-	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	coluna.add_child(t)
-	var texto := RichTextLabel.new()
-	texto.bbcode_enabled = true
-	texto.fit_content = true
-	texto.scroll_active = false
-	texto.custom_minimum_size = Vector2(400, 0)
-	texto.add_theme_font_override("normal_font", Fontes.pixel())
-	texto.add_theme_font_override("bold_font", Fontes.pixel(700))
-	texto.add_theme_font_size_override("normal_font_size", 12)
-	texto.add_theme_font_size_override("bold_font_size", 12)
-	texto.add_theme_color_override("default_color", Color(0.2, 0.14, 0.1))
-	texto.add_theme_constant_override("line_separation", 5)
-	var partes: Array[String] = []
-	for linha in linhas:
-		var nome: String = linha[0]
-		if not (nome.ends_with("!") or nome.ends_with("?")):
-			nome += ":"
-		partes.append("[b][color=#8a3a12]%s[/color][/b] %s" % [nome, linha[1]])
-	texto.text = "\n".join(partes)
-	coluna.add_child(texto)
-	var voltar := Fontes.rotulo("AÇÃO para voltar", Fontes.pixel(700), 10, Color(0.55, 0.36, 0.16))
-	voltar.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	coluna.add_child(voltar)
-	_painel.modulate.a = 0.0
-	create_tween().tween_property(_painel, "modulate:a", 1.0, 0.2)
+	_painel.fechou.connect(_fechar_painel)
 
 
 func _fechar_painel() -> void:
