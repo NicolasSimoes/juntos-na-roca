@@ -7,6 +7,8 @@ extends SceneTree
 
 const TELAS := {
 	"serra": "res://cenas/minijogos/minijogo_serra.tscn",
+	"pesca": "res://cenas/minijogos/minijogo_pesca.tscn",
+	"poco": "res://cenas/minijogos/minijogo_poco.tscn",
 }
 
 

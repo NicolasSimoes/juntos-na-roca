@@ -1,216 +1,173 @@
 class_name MinijogoPoco
 extends Minijogo
-## Papel A: escolhe uma tábua na pilha e encaixa no espaço de MESMO formato.
-## Papel B: bate o martelo quando o marcador passa no prego.
-## O prego só aparece com a tábua encaixada, e a próxima tábua só entra
-## depois que a anterior foi pregada.
+## =====================================================================
+## MINIJOGO DO POÇO (dia 1, tarefa "Consertar o poço") — o script "COLA"
+## =====================================================================
+## Mesmo formato da serra, em três peças:
+##   1. REGRA -> scripts/minijogos/regras/regra_poco.gd  (lógica pura, testável)
+##   2. CENA  -> cenas/minijogos/minijogo_poco.tscn      (tampa, pilha, martelo, poço)
+##   3. COLA  -> este arquivo: lê o controle, chama a regra e atualiza os nós.
+##
+##   teclado ──> regra.passo(...) ──> sinais (pegou_tabua, encaixou, martelou, aviso, errou, terminou)
+##                     │                          │
+##                     ▼                          ▼
+##              _mostrar() atualiza os nós   som, mensagem, fim
 
-const FORMAS := ["quadrado", "triangulo", "circulo", "losango"]
-const PREGOS_POR_TABUA := 2
-const MADEIRA := Color("a66e3e")
-const MADEIRA_ESCURA := Color("784a28")
-const ZONA := 0.11          # metade da largura da faixa do prego (0..1)
+## A imagem de cada formato de tábua. preload carrega o arquivo uma vez, junto com o script.
+const TEXTURAS := {
+	"quadrado": preload("res://assets/sprites/objetos/tabua_quadrado.png"),
+	"triangulo": preload("res://assets/sprites/objetos/tabua_triangulo.png"),
+	"circulo": preload("res://assets/sprites/objetos/tabua_circulo.png"),
+	"losango": preload("res://assets/sprites/objetos/tabua_losango.png"),
+}
+## O poço enche de água conforme as tábuas são pregadas (recortes do tileset do pacote).
+const POCOS := [
+	preload("res://assets/recortes/minijogos/poco_poco_0.tres"),
+	preload("res://assets/recortes/minijogos/poco_poco_1.tres"),
+	preload("res://assets/recortes/minijogos/poco_poco_2.tres"),
+	preload("res://assets/recortes/minijogos/poco_poco_3.tres"),
+]
+const VAZIO := Color(0.12, 0.1, 0.1)      ## cor do espaço ainda sem tábua (forma escura)
+const PREGO_BATIDO := Color(0.75, 0.75, 0.8)
 
-var vagas: Array = []        # formato de cada espaço da tampa
-var pilha: Array = []        # formatos na pilha ("" = já usada)
-var pregos := {}             # espaço -> pregos que faltam
-var cursor_pilha := 0
-var cursor_vaga := 0
-var segurando := ""
-var _de_onde := 0            # de que posição da pilha a tábua saiu
-var vaga_pregando := -1
-var marcador := 0.0
-var _sentido := 1.0
-var _batida := 0.0
-var _tremor := 0.0
+## ---------------------------------------------------------------------
+## Valores ajustáveis no Inspetor (@export)
+## ---------------------------------------------------------------------
+@export var martelo_levantado := -0.9    ## rotação do martelo parado (radianos)
+@export var martelo_batendo := 0.4       ## rotação do martelo no instante da batida
+@export var tempo_da_batida := 0.18      ## quanto tempo o martelo fica embaixo
+@export var tempo_do_tremor := 0.3       ## quanto tempo a barra treme depois de errar
+
+var regra: RegraPoco
+var _batida := 0.0      ## segundos que o martelo ainda fica embaixo
+var _tremor := 0.0      ## segundos que a barra ainda treme
+
+@onready var _vagas: Node2D = %Vagas
+@onready var _pilha: Node2D = %Pilha
+@onready var _cursor_vaga: ReferenceRect = %CursorVaga
+@onready var _cursor_pilha: ReferenceRect = %CursorPilha
+@onready var _tabua_na_mao: Sprite2D = %TabuaNaMao
+@onready var _espere: Label = %Espere
+@onready var _poco: Sprite2D = %Poco
+@onready var _martelo: Sprite2D = %Martelo
+@onready var _barra: Control = %Batida
+@onready var _zona: ColorRect = %Zona
+@onready var _marcador: ColorRect = %Marcador
+@onready var _agora: Label = %Agora
+
+var _barra_x := 0.0
 
 
 func montar() -> void:
 	titulo = "Consertar o poço"
-	texto_a = "%s escolhe · %s encaixa" % [Jogo.teclas_lado(na), Jogo.tecla_acao(na)]
-	texto_b = "%s quando passar no prego" % Jogo.tecla_acao(nb)
-	vagas = FORMAS.duplicate()
+	texto_a = "%s: escolha · %s: encaixe" % [Jogo.teclas_lado(na), Jogo.tecla_acao(na)]
+	texto_b = "Aperte %s no prego" % Jogo.tecla_acao(nb)
+
+	# Embaralha os espaços e a pilha (shuffle) e entrega para a regra.
+	var vagas: Array = RegraPoco.FORMAS.duplicate()
 	vagas.shuffle()
-	pilha = FORMAS.duplicate()
+	var pilha: Array = RegraPoco.FORMAS.duplicate()
 	pilha.shuffle()
+	regra = RegraPoco.new(vagas, pilha)
 
+	# Cada sinal da regra vira uma reação na tela.
+	regra.pegou_tabua.connect(func(): Sons.tocar("pegar"))   # função anônima (lambda) de uma linha
+	regra.encaixou.connect(_ao_encaixar)
+	regra.martelou.connect(_ao_martelar)
+	regra.aviso.connect(func(texto: String): mensagem(texto, Color(1, 0.9, 0.6)))
+	regra.errou.connect(erro)          # erro() vem do Minijogo: "tóim", mensagem e dica
+	regra.terminou.connect(terminar)   # terminar() vem do Minijogo
 
-func _pos_vaga(i: int) -> Vector2:
-	return Vector2(80 + i * 78, 98)
-
-
-func _pos_pilha(i: int) -> Vector2:
-	return Vector2(80 + i * 78, 196)
+	# O formato de cada espaço da tampa vem da regra (embaralhado).
+	for i in 4:
+		_tabua_da_vaga(i).texture = TEXTURAS[regra.vagas[i]]
+	# Cores de quem joga cada papel.
+	_cursor_vaga.border_color = Jogo.COR[na]
+	_marcador.color = Jogo.COR[nb]
+	_barra_x = _barra.position.x
+	_mostrar()
 
 
 func atualizar(delta: float) -> void:
 	_batida = maxf(0.0, _batida - delta)
 	_tremor = maxf(0.0, _tremor - delta)
-	_papel_a()
-	_papel_b(delta)
+	# apertou_esquerda/direita: verdadeiro só no quadro em que a seta desceu.
+	regra.passo(delta, Jogo.apertou_esquerda(na), Jogo.apertou_direita(na), Jogo.apertou(na), Jogo.apertou(nb))
+	_mostrar()
 
 
-func _papel_a() -> void:
-	if segurando == "":
-		if Jogo.apertou_esquerda(na):
-			cursor_pilha = (cursor_pilha + 3) % 4
-		if Jogo.apertou_direita(na):
-			cursor_pilha = (cursor_pilha + 1) % 4
-		if Jogo.apertou(na):
-			if vaga_pregando >= 0:
-				erro("Espere o martelo pregar!")
-			elif pilha[cursor_pilha] == "":
-				erro("Essa já foi usada.")
-			else:
-				segurando = pilha[cursor_pilha]
-				_de_onde = cursor_pilha
-				pilha[cursor_pilha] = ""
-				Sons.tocar("pegar")
-				cursor_vaga = 0
-				while pregos.has(cursor_vaga) and cursor_vaga < 3:
-					cursor_vaga += 1
-	else:
-		if Jogo.apertou_esquerda(na):
-			cursor_vaga = (cursor_vaga + 3) % 4
-		if Jogo.apertou_direita(na):
-			cursor_vaga = (cursor_vaga + 1) % 4
-		if Jogo.apertou(na):
-			if pregos.has(cursor_vaga):
-				erro("Esse espaço já está pronto.")
-			elif vagas[cursor_vaga] == segurando:
-				pregos[cursor_vaga] = PREGOS_POR_TABUA
-				vaga_pregando = cursor_vaga
-				segurando = ""
-				Sons.tocar("encaixe")
-				mensagem("Encaixou! Agora o martelo.", Color(0.8, 1, 0.7))
-				acerto()
-				for k in 4:
-					if pilha[(cursor_pilha + k) % 4] != "":
-						cursor_pilha = (cursor_pilha + k) % 4
-						break
-			else:
-				erro("Não é esse formato!")
-				pilha[_de_onde] = segurando
-				segurando = ""
+# ---------------------------------------------------------------- reações aos sinais
+func _ao_encaixar(texto: String) -> void:
+	Sons.tocar("encaixe")
+	mensagem(texto, Color(0.8, 1, 0.7))
+	acerto()
 
 
-func _papel_b(delta: float) -> void:
-	marcador += delta * 0.8 * _sentido
-	if marcador >= 1.0:
-		marcador = 1.0
-		_sentido = -1.0
-	elif marcador <= 0.0:
-		marcador = 0.0
-		_sentido = 1.0
-	if not Jogo.apertou(nb):
-		return
-	if vaga_pregando < 0:
-		mensagem("Espere a tábua ser encaixada!", Color(1, 0.9, 0.6))
-		return
-	_batida = 0.18
-	if absf(marcador - 0.5) <= ZONA:
-		pregos[vaga_pregando] -= 1
+## Toda batida desce o martelo; se errou o prego, a barra treme.
+func _ao_martelar(no_prego: bool) -> void:
+	_batida = tempo_da_batida
+	if no_prego:
 		Sons.tocar("toc")
 		acerto()
-		if pregos[vaga_pregando] <= 0:
-			vaga_pregando = -1
-			if pregos.size() == 4:
-				terminar("Poço consertado!")
 	else:
-		_tremor = 0.3
-		erro("Errou o prego!")
+		_tremor = tempo_do_tremor
 
 
-# ------------------------------------------------------------------ desenho
-func desenhar(c: Control) -> void:
-	# tampa do poço com os 4 espaços
-	c.draw_rect(Rect2(36, 52, 312, 94), Color("8b8f99"))
-	c.draw_rect(Rect2(36, 52, 312, 94), Color("5a5e68"), false, 3)
+# ---------------------------------------------------------------- só visual
+func _tabua_da_vaga(i: int) -> Sprite2D:
+	return _vagas.get_child(i).get_node("Tabua")
+
+
+func _mostrar() -> void:
+	var prontas := 0
 	for i in 4:
-		var p := _pos_vaga(i)
-		if pregos.has(i):
-			_forma(c, vagas[i], p, 46, MADEIRA, MADEIRA_ESCURA)
-			_desenhar_pregos(c, i, p)
-		else:
-			_forma(c, vagas[i], p, 46, Color(0.12, 0.1, 0.1), Color(0.3, 0.3, 0.32))
-		if segurando != "" and i == cursor_vaga:
-			c.draw_rect(Rect2(p - Vector2(30, 30), Vector2(60, 60)), Jogo.COR[na], false, 2.5)
-	# tábua na mão do papel A
-	if segurando != "":
-		var p := _pos_vaga(cursor_vaga) + Vector2(0, -2 + 3 * sin(tempo * 8.0))
-		_forma(c, segurando, p, 40, MADEIRA.lightened(0.15), MADEIRA_ESCURA)
-	# pilha
-	texto_centro(c, Vector2(192, 162), "pilha de tábuas", 8, Color(0.2, 0.15, 0.1), 200)
+		var vaga := _vagas.get_child(i)
+		var encaixada := regra.pregos.has(i)
+		# Espaço vazio = forma quase preta (um buraco); encaixado = cor da madeira.
+		(vaga.get_node("Tabua") as Sprite2D).modulate = Color.WHITE if encaixada else VAZIO
+		var faltam: int = regra.pregos.get(i, RegraPoco.PREGOS_POR_TABUA)
+		if encaixada and faltam == 0:
+			prontas += 1
+		for k in RegraPoco.PREGOS_POR_TABUA:
+			var prego := vaga.get_node("Prego%d" % (k + 1)) as Sprite2D
+			prego.visible = encaixada
+			var batido := k < RegraPoco.PREGOS_POR_TABUA - faltam
+			prego.modulate = PREGO_BATIDO if batido else Color.WHITE
+			prego.scale = Vector2(0.8, 0.5) if batido else Vector2.ONE   # prego batido "afunda" (fica achatado)
+
+	# Papel A: com a mão vazia, olha a pilha; com tábua, olha os espaços.
+	var cor_a: Color = Jogo.COR[na]
+	var segurando := regra.segurando != ""
+	_cursor_pilha.visible = not segurando
+	_cursor_vaga.visible = segurando
+	_tabua_na_mao.visible = segurando
+	var vaga_pos := (_vagas.get_child(regra.cursor_vaga) as Node2D).position
+	_cursor_vaga.position = vaga_pos - _cursor_vaga.size / 2.0
+	if segurando:
+		_tabua_na_mao.texture = TEXTURAS[regra.segurando]
+		_tabua_na_mao.position = vaga_pos + Vector2(0, -2.0 + 3.0 * sin(tempo * 8.0))   # flutuando
+	var lugar_pos := (_pilha.get_child(regra.cursor_pilha) as Node2D).position
+	_cursor_pilha.position = lugar_pos - _cursor_pilha.size / 2.0
+	# darkened(0.5) escurece a cor: o cursor apaga enquanto o martelo trabalha.
+	_cursor_pilha.border_color = cor_a.darkened(0.5) if regra.vaga_pregando >= 0 else cor_a
 	for i in 4:
-		var p := _pos_pilha(i)
-		c.draw_rect(Rect2(p - Vector2(30, 26), Vector2(60, 52)), Color(0.45, 0.62, 0.3, 0.6))
-		if pilha[i] != "":
-			_forma(c, pilha[i], p, 40, MADEIRA, MADEIRA_ESCURA)
-		if segurando == "" and i == cursor_pilha:
-			var cor: Color = Jogo.COR[na]
-			if vaga_pregando >= 0:
-				cor = cor.darkened(0.5)
-			c.draw_rect(Rect2(p - Vector2(31, 27), Vector2(62, 54)), cor, false, 2.5)
-	if vaga_pregando >= 0 and segurando == "":
-		texto_centro(c, Vector2(192, 240), "espere o martelo...", 8, Color(0.3, 0.2, 0.1), 200)
-	_desenhar_martelo(c)
+		var tabua := _pilha.get_child(i).get_node("Tabua") as Sprite2D
+		tabua.visible = regra.pilha[i] != ""
+		if tabua.visible:
+			tabua.texture = TEXTURAS[regra.pilha[i]]
+	_espere.visible = regra.vaga_pregando >= 0 and not segurando
 
+	# O poço enche: 0 a 3 tábuas prontas (com 4, continua cheio).
+	_poco.texture = POCOS[mini(prontas, POCOS.size() - 1)]
 
-func _desenhar_pregos(c: Control, i: int, p: Vector2) -> void:
-	var faltam: int = pregos[i]
-	var posicoes := [Vector2(-12, -12), Vector2(12, 10)]
-	for k in PREGOS_POR_TABUA:
-		var pp: Vector2 = p + posicoes[k]
-		var batido := k < PREGOS_POR_TABUA - faltam
-		if batido:
-			c.draw_circle(pp, 2.5, Color("545a66"))
-		else:
-			c.draw_rect(Rect2(pp + Vector2(-1, -9), Vector2(2, 9)), Color("9aa0aa"))
-			c.draw_rect(Rect2(pp + Vector2(-3, -11), Vector2(6, 2)), Color("545a66"))
-
-
-func _desenhar_martelo(c: Control) -> void:
-	var area := Rect2(378, 52, 164, 190)
-	c.draw_rect(area, Color(1, 1, 1, 0.25))
-	texto_centro(c, Vector2(area.get_center().x, 68), "martelo", 9, Color(0.2, 0.15, 0.1), 160)
-	var tremor := Vector2(sin(tempo * 80.0) * 3.0 * _tremor / 0.3, 0)
-	var r := Rect2(390, 150, 140, 16)
-	r.position += tremor
-	c.draw_rect(r.grow(2), Color(0.15, 0.1, 0.06))
-	c.draw_rect(r, Color(0.85, 0.75, 0.6))
-	var zona := Rect2(r.position.x + r.size.x * (0.5 - ZONA), r.position.y, r.size.x * ZONA * 2, r.size.y)
-	var cor_zona := Color(0.4, 0.8, 0.35) if vaga_pregando >= 0 else Color(0.6, 0.6, 0.6)
-	c.draw_rect(zona, cor_zona)
-	textura(c, "res://assets/sprites/objetos/prego.png", Vector2(zona.get_center().x, r.position.y - 10), 1.5)
-	var mx := r.position.x + r.size.x * marcador
-	c.draw_rect(Rect2(mx - 2, r.position.y - 4, 4, r.size.y + 8), Jogo.COR[nb])
-	c.draw_rect(Rect2(mx - 2, r.position.y - 4, 4, r.size.y + 8), Color.BLACK, false, 1)
-	# martelo balançando
-	var ang := -0.9 if _batida <= 0.0 else 0.4
-	c.draw_set_transform(Vector2(area.get_center().x + 6, 116), ang, Vector2(3, 3))
-	var t := Jogo.tex("res://assets/sprites/objetos/martelo.png")
-	c.draw_texture(t, Vector2(-8, -12))
-	c.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
-	if vaga_pregando < 0:
-		texto_centro(c, Vector2(area.get_center().x, 200), "espere a tábua...", 8, Color(0.3, 0.2, 0.1), 160)
+	# Papel B: martelo, barra e marcador.
+	_martelo.rotation = martelo_batendo if _batida > 0.0 else martelo_levantado
+	var tremor := sin(tempo * 80.0) * 3.0 * _tremor / tempo_do_tremor if _tremor > 0.0 else 0.0
+	_barra.position.x = _barra_x + tremor
+	_marcador.position.x = _barra.size.x * regra.marcador - _marcador.size.x / 2.0
+	var pregando := regra.vaga_pregando >= 0
+	_zona.color = Color(0.4, 0.8, 0.35) if pregando else Color(0.6, 0.6, 0.6)
+	if not pregando:
+		_agora.text = "espere a tábua..."
 	else:
-		texto_centro(c, Vector2(area.get_center().x, 200), "AGORA!" if absf(marcador - 0.5) <= ZONA else "", 10, Color(0.2, 0.5, 0.1), 160)
-
-
-func _forma(c: Control, forma: String, centro: Vector2, tam: float, cor: Color, borda: Color) -> void:
-	var m := tam / 2.0
-	var pontos := PackedVector2Array()
-	match forma:
-		"quadrado":
-			pontos = PackedVector2Array([centro + Vector2(-m, -m), centro + Vector2(m, -m), centro + Vector2(m, m), centro + Vector2(-m, m)])
-		"triangulo":
-			pontos = PackedVector2Array([centro + Vector2(0, -m), centro + Vector2(m, m), centro + Vector2(-m, m)])
-		"losango":
-			pontos = PackedVector2Array([centro + Vector2(0, -m), centro + Vector2(m, 0), centro + Vector2(0, m), centro + Vector2(-m, 0)])
-		"circulo":
-			for k in 24:
-				pontos.append(centro + Vector2(m, 0).rotated(TAU * k / 24.0))
-	c.draw_colored_polygon(pontos, cor)
-	var fechado := pontos.duplicate()
-	fechado.append(pontos[0])
-	c.draw_polyline(fechado, borda, 2.0)
+		_agora.text = "AGORA!" if absf(regra.marcador - 0.5) <= RegraPoco.ZONA else ""

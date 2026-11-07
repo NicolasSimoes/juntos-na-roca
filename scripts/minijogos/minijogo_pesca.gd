@@ -1,118 +1,142 @@
 class_name MinijogoPesca
 extends Minijogo
-## Papel A aperta AÇÃO várias vezes para puxar a linha (o peixe vem chegando).
-## Papel B anda pelo píer com o puçá, seguindo a sombra do peixe,
-## e aperta AÇÃO quando o peixe pula. São 3 peixes.
+## =====================================================================
+## MINIJOGO DA PESCA (dia 4, tarefa "Pescar") — o script "COLA"
+## =====================================================================
+## Mesmo formato da serra, em três peças:
+##   1. REGRA -> scripts/minijogos/regras/regra_pesca.gd  (lógica pura, testável)
+##   2. CENA  -> cenas/minijogos/minijogo_pesca.tscn      (lago, píer, netos, peixe)
+##   3. COLA  -> este arquivo: lê o controle, chama a regra e atualiza os nós.
+##
+##   teclado ──> regra.passo(...) ──> sinais (fisgou, puxou, pulou, pegou, errou, terminou)
+##                     │                         │
+##                     ▼                         ▼
+##              _mostrar() move os nós      som, mensagem, fim
 
-const META := 3
+
+## ---------------------------------------------------------------------
+## Valores ajustáveis no Inspetor (@export)
+## ---------------------------------------------------------------------
+## Altura máxima do pulo do peixe (pixels).
+@export var altura_do_pulo := 70.0
+## Quantos quadros da animação da água por segundo.
+@export var quadros_da_agua_por_segundo := 5.0
+## Distância do neto até o puçá (o neto fica à esquerda da rede).
+@export var neto_atras_do_puca := 26.0
+
+## Linha da água no painel (em pixels): sombra e boia ficam em relação a ela.
 const AGUA_Y := 150.0
+const QUADROS_DA_AGUA := 6      ## water_03_48x48.png tem 6 quadros de 48 px lado a lado
 
-var pegos := 0
-var estado := "esperando"     # esperando, fisgado, pulando
-var espera := 1.5
-var dist := 1.0               # 1 = longe, 0 = colado no píer
-var puca_x := 300.0
-var pulo := 0.0
-var _peixe_x := 400.0
+var regra := RegraPesca.new()
+
+@onready var _agua: NinePatchRect = %Agua
+@onready var _pescador: Sprite2D = %Pescador
+@onready var _puqueiro: Sprite2D = %Puqueiro
+@onready var _vara: Line2D = %Vara
+@onready var _linha: Line2D = %Linha
+@onready var _boia: Sprite2D = %Boia
+@onready var _sombra: Sprite2D = %Sombra
+@onready var _bolhas: CPUParticles2D = %Bolhas
+@onready var _peixe: Sprite2D = %Peixe
+@onready var _puca: Sprite2D = %Puca
+@onready var _placar: Node2D = %Placar
+@onready var _distancia: ProgressBar = %Distancia
+
+var _puca_dx := 0.0     ## distância (x) entre o puçá na cena e o puca_x da regra
+var _boia_y := 0.0
 
 
 func montar() -> void:
 	titulo = "Pescar no píer"
-	texto_a = "APERTE %s para puxar a linha" % Jogo.tecla_acao(na)
-	texto_b = "%s anda · %s pega" % [Jogo.teclas_lado(nb), Jogo.tecla_acao(nb)]
+	texto_a = "Aperte %s: puxe a linha" % Jogo.tecla_acao(na)
+	texto_b = "%s: ande · %s: pegue" % [Jogo.teclas_lado(nb), Jogo.tecla_acao(nb)]
+
+	# Cada sinal da regra vira uma reação na tela.
+	regra.fisgou.connect(_ao_mexer_na_agua)
+	regra.pulou.connect(_ao_mexer_na_agua)
+	regra.puxou.connect(_ao_puxar)
+	regra.pegou.connect(_ao_pegar)
+	regra.errou.connect(erro)          # erro() vem do Minijogo: "tóim", mensagem e dica
+	regra.terminou.connect(terminar)   # terminar() vem do Minijogo
+
+	# Quem pegou cada papel define qual neto aparece (Aparencia = lugar único da arte).
+	_pescador.texture = Aparencia.neto(na, "lado")
+	_puqueiro.texture = Aparencia.neto(nb, "lado")
+	Aparencia.ajustar_pes(_pescador)
+	Aparencia.ajustar_pes(_puqueiro)
+
+	# Guardamos onde o puçá e a boia estão na cena: o layout continua sendo o do editor.
+	_puca_dx = _puca.position.x - regra.puca_x
+	_boia_y = _boia.position.y
+	_mostrar()
 
 
-func atualizar(delta: float) -> void:
-	puca_x = clampf(puca_x + Jogo.direcao(nb).x * 170.0 * delta, 160.0, 540.0)
-	_peixe_x = 190.0 + dist * 320.0 + sin(tempo * 2.3) * 26.0
-	match estado:
+func atualizar(_delta: float) -> void:
+	# Jogo.direcao(n) devolve um Vector2 com as setas/WASD; usamos só o x (esquerda/direita).
+	regra.passo(_delta, Jogo.apertou(na), Jogo.direcao(nb).x, Jogo.apertou(nb))
+	_mostrar()
+
+
+# ---------------------------------------------------------------- reações aos sinais
+## O peixe mordeu ou pulou: barulho de água e recado amarelo.
+func _ao_mexer_na_agua(texto: String) -> void:
+	Sons.tocar("splash")
+	mensagem(texto, Color(1, 1, 0.7))
+
+
+## Puxada do papel A: som de força (mais baixo e agudo) e progresso.
+func _ao_puxar() -> void:
+	Sons.tocar("forca", -8.0, 1.4)
+	acerto()
+
+
+## O papel B pegou o peixe.
+func _ao_pegar(texto: String) -> void:
+	Sons.tocar("acerto")
+	acerto()
+	if texto != "":
+		mensagem(texto, Color(0.8, 1, 0.7))
+
+
+# ---------------------------------------------------------------- só visual
+func _mostrar() -> void:
+	# Água: andar o region_rect de 48 em 48 px troca o quadro da animação.
+	var quadro := int(tempo * quadros_da_agua_por_segundo) % QUADROS_DA_AGUA
+	_agua.region_rect.position.x = 48.0 * quadro
+
+	# O puçá e o neto andam juntos pelo píer.
+	_puca.position.x = regra.puca_x + _puca_dx
+	_puqueiro.position.x = _puca.position.x - neto_atras_do_puca
+
+	# A ponta da vara é o último ponto da Line2D da vara.
+	var ponta := _vara.points[_vara.points.size() - 1]
+	_boia.visible = regra.estado == "esperando"
+	_sombra.visible = regra.estado == "fisgado"
+	_peixe.visible = regra.estado == "pulando"
+	# emitting liga/desliga as partículas: bolhas só com peixe fisgado.
+	_bolhas.emitting = regra.estado == "fisgado"
+	_bolhas.position.x = regra.peixe_x
+	var fim_da_linha := Vector2.ZERO
+	match regra.estado:
 		"esperando":
-			espera -= delta
-			if espera <= 0.0:
-				estado = "fisgado"
-				dist = 1.0
-				Sons.tocar("splash")
-				mensagem("Fisgou! Puxa a linha!", Color(1, 1, 0.7))
+			_boia.position.y = _boia_y + sin(tempo * 4.0) * 2.0   # boia balançando
+			fim_da_linha = _boia.position
 		"fisgado":
-			if Jogo.apertou(na):
-				dist -= 0.07
-				Sons.tocar("forca", -8.0, 1.4)
-				acerto()
-			dist = minf(1.0, dist + delta * 0.06)
-			if dist <= 0.22:
-				estado = "pulando"
-				pulo = 0.0
-				Sons.tocar("splash")
-				mensagem("Pulou! Pega com o puçá!", Color(1, 1, 0.7))
+			_sombra.position.x = regra.peixe_x
+			fim_da_linha = Vector2(regra.peixe_x, AGUA_Y + 30.0)
 		"pulando":
-			pulo += delta
-			if Jogo.apertou(nb):
-				if absf(puca_x - _peixe_x) < 30.0:
-					pegos += 1
-					Sons.tocar("acerto")
-					acerto()
-					estado = "esperando"
-					espera = 1.2
-					dist = 1.0
-					if pegos >= META:
-						terminar("3 peixes! Que almoço!")
-					else:
-						mensagem("Pegou! Mais %d." % (META - pegos), Color(0.8, 1, 0.7))
-				else:
-					erro("Errou! Siga a sombra do peixe.")
-					estado = "fisgado"
-					dist = 0.45
-			elif pulo >= 1.2:
-				estado = "fisgado"
-				dist = 0.45
-				erro("Ele voltou para a água!")
+			# sin de 0 a PI faz um arco: sobe e desce em JANELA_DO_PULO segundos.
+			var t := clampf(regra.pulo / RegraPesca.JANELA_DO_PULO, 0.0, 1.0)
+			_peixe.position = Vector2(regra.peixe_x, AGUA_Y - sin(t * PI) * altura_do_pulo)
+			fim_da_linha = _peixe.position
+	# Line2D.points é a lista de pontos da linha: da ponta da vara até o fim.
+	_linha.points = PackedVector2Array([ponta, fim_da_linha])
 
+	# Placar: os peixes pegos ficam coloridos (modulate branco = cor original).
+	for i in _placar.get_child_count():
+		var icone := _placar.get_child(i) as Sprite2D
+		icone.modulate = Color.WHITE if i < regra.pegos else Color(0, 0, 0, 0.35)
 
-func desenhar(c: Control) -> void:
-	# céu, água e píer comprido
-	c.draw_rect(Rect2(0, 0, 560, AGUA_Y), Color(0.62, 0.84, 0.97))
-	c.draw_rect(Rect2(0, AGUA_Y, 560, 150), Color("498ce6"))
-	for i in 7:
-		var x := fmod(i * 90.0 + tempo * 20.0, 560.0)
-		c.draw_line(Vector2(x, AGUA_Y + 30 + i * 14), Vector2(x + 20, AGUA_Y + 30 + i * 14), Color("96c8fa"), 1.0)
-	c.draw_rect(Rect2(0, AGUA_Y - 14, 560, 10), Color("a66e3e"))
-	for x in range(0, 560, 40):
-		c.draw_rect(Rect2(x + 6, AGUA_Y - 4, 6, 26), Color("784a28"))
-	# quem pesca, na ponta do píer
-	_jogador(c, na, Vector2(60, AGUA_Y - 14), false)
-	var ponta := Vector2(120, 70)
-	c.draw_line(Vector2(80, AGUA_Y - 36), ponta, Color("784a28"), 3.0)
-	# peixe
-	var peixe_pos := Vector2(_peixe_x, AGUA_Y + 36)
-	if estado == "esperando":
-		var boia := Vector2(420, AGUA_Y - 3 + sin(tempo * 4.0) * 2.0)
-		c.draw_line(ponta, boia, Color(1, 1, 1, 0.7), 1.0)
-		textura(c, "res://assets/sprites/extras/boia.png", boia, 2.0)
-	elif estado == "fisgado":
-		c.draw_line(ponta, Vector2(_peixe_x, AGUA_Y + 30), Color(1, 1, 1, 0.8), 1.0)
-		textura(c, "res://assets/sprites/extras/sombra_peixe.png", peixe_pos, 3.0)
-	elif estado == "pulando":
-		var altura := sin(clampf(pulo / 1.2, 0.0, 1.0) * PI) * 70.0
-		var p := Vector2(_peixe_x, AGUA_Y - altura)
-		c.draw_line(ponta, p, Color(1, 1, 1, 0.8), 1.0)
-		textura(c, "res://assets/sprites/objetos/peixe.png", p, 3.0)
-		texto_centro(c, p + Vector2(0, -28), "!", 16, Color(1, 0.9, 0.3), 40)
-	# quem segura o puçá
-	_jogador(c, nb, Vector2(puca_x - 26, AGUA_Y - 14), false)
-	c.draw_line(Vector2(puca_x - 14, AGUA_Y - 36), Vector2(puca_x, AGUA_Y - 4), Color("784a28"), 3.0)
-	c.draw_arc(Vector2(puca_x, AGUA_Y), 14, 0, PI, 16, Color(0.95, 0.95, 0.95), 2.0)
-	c.draw_line(Vector2(puca_x - 14, AGUA_Y), Vector2(puca_x + 14, AGUA_Y), Color("545a66"), 2.0)
-	# placar
-	for i in META:
-		var cor := Color.WHITE if i < pegos else Color(0, 0, 0, 0.35)
-		textura(c, "res://assets/sprites/objetos/peixe.png", Vector2(440 + i * 34, 52), 2.0, false, cor)
-	if estado == "fisgado":
-		texto_centro(c, Vector2(130, 52), "distância do peixe", 8, Color(0.15, 0.1, 0.05), 160)
-		barra(c, Rect2(60, 58, 140, 10), dist, Color(0.3, 0.5, 0.95))
-
-
-func _jogador(c: Control, n: int, pos: Vector2, virar: bool) -> void:
-	var t := Jogo.tex("res://assets/sprites/personagens/p%d_lado_parado.png" % n)
-	c.draw_set_transform(pos, 0.0, Vector2(-3 if virar else 3, 3))
-	c.draw_texture(t, Vector2(-8, -24))
-	c.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	_distancia.visible = regra.estado == "fisgado"
+	_distancia.value = regra.dist

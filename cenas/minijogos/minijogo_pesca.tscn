@@ -1,0 +1,327 @@
+[gd_scene load_steps=16 format=3]
+
+[ext_resource type="PackedScene" path="res://cenas/minijogos/minijogo_base.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scripts/minijogos/minijogo_pesca.gd" id="2_cola"]
+[ext_resource type="Texture2D" path="res://assets/SuperRetroWorld_Farming/Tilesets/SuperRetroWorld_Farming_Tileset.png" id="3_tileset"]
+[ext_resource type="Texture2D" path="res://assets/SuperRetroWorld_Farming/Props/Water/water_03_48x48.png" id="4_agua"]
+[ext_resource type="Texture2D" path="res://assets/recortes/minijogos/pesca_poste.tres" id="5_poste"]
+[ext_resource type="Texture2D" path="res://assets/sprites/personagens/p1_lado_parado.png" id="6_neto"]
+[ext_resource type="Texture2D" path="res://assets/sprites/extras/boia.png" id="7_boia"]
+[ext_resource type="Texture2D" path="res://assets/sprites/extras/sombra_peixe.png" id="8_sombra"]
+[ext_resource type="Texture2D" path="res://assets/sprites/objetos/peixe.png" id="9_peixe"]
+[ext_resource type="Texture2D" path="res://assets/sprites/extras/puca.png" id="10_puca"]
+[ext_resource type="Texture2D" path="res://assets/SuperRetroWorld_Farming/Props/Trees/Sprites/tree_02.png" id="11_arvore_a"]
+[ext_resource type="Texture2D" path="res://assets/SuperRetroWorld_Farming/Props/Trees/Sprites/tree_11.png" id="12_arvore_b"]
+[ext_resource type="Texture2D" path="res://assets/SuperRetroWorld_Farming/Props/Trees/Sprites/tree_31.png" id="13_arvore_c"]
+[ext_resource type="Texture2D" path="res://assets/SuperRetroWorld_Farming/Props/Trees/Sprites/tree_04.png" id="14_arvore_d"]
+[ext_resource type="Texture2D" path="res://assets/sprites/extras/bolinha.png" id="15_bolinha"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_azul"]
+bg_color = Color(0.3, 0.5, 0.95, 1)
+
+[node name="MinijogoPesca" instance=ExtResource("1_base")]
+editor_description = "Minijogo da pesca (dia 4). Herda minijogo_base.tscn e põe o cenário em Painel/Conteudo. O script minijogo_pesca.gd liga a regra (regra_pesca.gd) a estes nós."
+script = ExtResource("2_cola")
+
+[node name="Ceu" type="ColorRect" parent="Painel/Conteudo"]
+editor_description = "Céu: um retângulo de cor, atrás de tudo."
+offset_right = 560.0
+offset_bottom = 150.0
+mouse_filter = 2
+color = Color(0.62, 0.84, 0.97, 1)
+
+[node name="Margem" type="NinePatchRect" parent="Painel/Conteudo"]
+editor_description = "A outra margem do lago: o tile de grama do pacote repetido (axis_stretch = Tile). region_rect escolhe o pedaço do tileset."
+offset_top = 118.0
+offset_right = 280.0
+offset_bottom = 134.0
+scale = Vector2(2, 2)
+mouse_filter = 2
+texture = ExtResource("3_tileset")
+region_rect = Rect2(480, 320, 16, 16)
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="Arvores" type="Node2D" parent="Painel/Conteudo"]
+editor_description = "Árvores do pacote na margem de lá. offset negativo põe a origem no pé da árvore."
+
+[node name="Arvore1" type="Sprite2D" parent="Painel/Conteudo/Arvores"]
+position = Vector2(250, 138)
+scale = Vector2(1.3, 1.3)
+texture = ExtResource("11_arvore_a")
+centered = false
+offset = Vector2(-24, -48)
+
+[node name="Arvore2" type="Sprite2D" parent="Painel/Conteudo/Arvores"]
+position = Vector2(330, 138)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("12_arvore_b")
+centered = false
+offset = Vector2(-24, -45)
+
+[node name="Arvore3" type="Sprite2D" parent="Painel/Conteudo/Arvores"]
+position = Vector2(395, 138)
+scale = Vector2(1.2, 1.2)
+texture = ExtResource("14_arvore_d")
+centered = false
+offset = Vector2(-22, -45)
+
+[node name="Arvore4" type="Sprite2D" parent="Painel/Conteudo/Arvores"]
+position = Vector2(470, 138)
+scale = Vector2(1.6, 1.6)
+texture = ExtResource("13_arvore_c")
+centered = false
+offset = Vector2(-23, -46)
+
+[node name="Arvore5" type="Sprite2D" parent="Painel/Conteudo/Arvores"]
+position = Vector2(540, 138)
+scale = Vector2(1.2, 1.2)
+texture = ExtResource("11_arvore_a")
+centered = false
+offset = Vector2(-24, -48)
+
+[node name="Arvore6" type="Sprite2D" parent="Painel/Conteudo/Arvores"]
+position = Vector2(170, 138)
+scale = Vector2(1.1, 1.1)
+texture = ExtResource("12_arvore_b")
+centered = false
+offset = Vector2(-24, -45)
+
+[node name="Agua" type="NinePatchRect" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "Lago: o primeiro quadro (48x48) de water_03 repetido. O script anda o region_rect de 48 em 48 px para trocar o quadro e a água mexer."
+offset_top = 150.0
+offset_right = 280.0
+offset_bottom = 200.0
+scale = Vector2(2, 2)
+mouse_filter = 2
+texture = ExtResource("4_agua")
+region_rect = Rect2(0, 0, 48, 48)
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="Postes" type="Node2D" parent="Painel/Conteudo"]
+editor_description = "Postes do píer (recorte pesca_poste.tres do tileset)."
+
+[node name="Poste1" type="Sprite2D" parent="Painel/Conteudo/Postes"]
+position = Vector2(12, 164)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("5_poste")
+
+[node name="Poste2" type="Sprite2D" parent="Painel/Conteudo/Postes"]
+position = Vector2(52, 164)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("5_poste")
+
+[node name="Poste3" type="Sprite2D" parent="Painel/Conteudo/Postes"]
+position = Vector2(92, 164)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("5_poste")
+
+[node name="Poste4" type="Sprite2D" parent="Painel/Conteudo/Postes"]
+position = Vector2(132, 164)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("5_poste")
+
+[node name="Poste5" type="Sprite2D" parent="Painel/Conteudo/Postes"]
+position = Vector2(172, 164)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("5_poste")
+
+[node name="Poste6" type="Sprite2D" parent="Painel/Conteudo/Postes"]
+position = Vector2(212, 164)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("5_poste")
+
+[node name="Poste7" type="Sprite2D" parent="Painel/Conteudo/Postes"]
+position = Vector2(252, 164)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("5_poste")
+
+[node name="Poste8" type="Sprite2D" parent="Painel/Conteudo/Postes"]
+position = Vector2(292, 164)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("5_poste")
+
+[node name="Poste9" type="Sprite2D" parent="Painel/Conteudo/Postes"]
+position = Vector2(332, 164)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("5_poste")
+
+[node name="Poste10" type="Sprite2D" parent="Painel/Conteudo/Postes"]
+position = Vector2(372, 164)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("5_poste")
+
+[node name="Poste11" type="Sprite2D" parent="Painel/Conteudo/Postes"]
+position = Vector2(412, 164)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("5_poste")
+
+[node name="Poste12" type="Sprite2D" parent="Painel/Conteudo/Postes"]
+position = Vector2(452, 164)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("5_poste")
+
+[node name="Poste13" type="Sprite2D" parent="Painel/Conteudo/Postes"]
+position = Vector2(492, 164)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("5_poste")
+
+[node name="Poste14" type="Sprite2D" parent="Painel/Conteudo/Postes"]
+position = Vector2(532, 164)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("5_poste")
+
+[node name="Pier" type="NinePatchRect" parent="Painel/Conteudo"]
+editor_description = "O píer: as tábuas de madeira do pacote repetidas ao longo da tela."
+offset_top = 134.0
+offset_right = 280.0
+offset_bottom = 142.0
+scale = Vector2(2, 2)
+mouse_filter = 2
+texture = ExtResource("3_tileset")
+region_rect = Rect2(80, 592, 16, 16)
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="Pescador" type="Sprite2D" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "Neto do papel A (vara). A textura vem de Aparencia.neto() no script, conforme quem pegou o papel."
+position = Vector2(60, 134)
+scale = Vector2(3, 3)
+texture = ExtResource("6_neto")
+centered = false
+offset = Vector2(-8, -24)
+
+[node name="Vara" type="Line2D" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "A vara de pescar: uma linha de dois pontos. O último ponto é a ponta, de onde sai a linha."
+points = PackedVector2Array(78, 110, 120, 70)
+width = 3.0
+default_color = Color(0.470588, 0.290196, 0.156863, 1)
+
+[node name="Linha" type="Line2D" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "A linha de pesca. O script liga a ponta da vara até a boia, a sombra ou o peixe."
+points = PackedVector2Array(120, 70, 420, 147)
+width = 1.0
+default_color = Color(1, 1, 1, 0.8)
+
+[node name="Boia" type="Sprite2D" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "Boia: aparece enquanto espera o peixe morder."
+position = Vector2(420, 147)
+scale = Vector2(2, 2)
+texture = ExtResource("7_boia")
+
+[node name="Puqueiro" type="Sprite2D" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "Neto do papel B (puçá). Anda pelo píer junto com o puçá."
+position = Vector2(274, 134)
+scale = Vector2(3, 3)
+texture = ExtResource("6_neto")
+centered = false
+offset = Vector2(-8, -24)
+
+[node name="Puca" type="Sprite2D" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "O puçá (rede). flip_v vira a imagem para a rede ficar embaixo, perto da água. O script move no x da regra (puca_x)."
+position = Vector2(291, 139)
+scale = Vector2(3, 3)
+texture = ExtResource("10_puca")
+flip_v = true
+
+[node name="Sombra" type="Sprite2D" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "Sombra do peixe fisgado, embaixo da água. O papel B segue esta sombra com o puçá."
+visible = false
+position = Vector2(400, 186)
+scale = Vector2(3, 3)
+texture = ExtResource("8_sombra")
+
+[node name="Bolhas" type="CPUParticles2D" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "Bolhinhas brancas em cima da sombra do peixe, para as crianças acharem o peixe na água escura. O script liga (emitting) só com peixe fisgado."
+position = Vector2(400, 180)
+emitting = false
+amount = 12
+lifetime = 1.0
+texture = ExtResource("15_bolinha")
+emission_shape = 3
+emission_rect_extents = Vector2(14, 4)
+direction = Vector2(0, -1)
+spread = 20.0
+gravity = Vector2(0, -20)
+initial_velocity_min = 8.0
+initial_velocity_max = 20.0
+scale_amount_min = 0.7
+scale_amount_max = 1.1
+color = Color(0.85, 0.95, 1, 0.9)
+
+[node name="Peixe" type="Sprite2D" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "O peixe no ar, quando pula."
+visible = false
+position = Vector2(400, 100)
+scale = Vector2(3, 3)
+texture = ExtResource("9_peixe")
+
+[node name="Exclamacao" type="Label" parent="Painel/Conteudo/Peixe"]
+editor_description = "O '!' em cima do peixe. Está dentro do Peixe, então anda junto (escala 1/3 para desfazer a escala do pai)."
+offset_left = -20.0
+offset_top = -18.0
+offset_right = 20.0
+offset_bottom = -6.0
+scale = Vector2(0.333, 0.333)
+theme_type_variation = &"Rotulo"
+theme_override_colors/font_color = Color(1, 0.9, 0.3, 1)
+theme_override_font_sizes/font_size = 16
+text = "!"
+horizontal_alignment = 1
+
+[node name="Placar" type="Node2D" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "Os 3 peixes do placar: ficam escuros até serem pegos."
+
+[node name="Peixe1" type="Sprite2D" parent="Painel/Conteudo/Placar"]
+modulate = Color(0, 0, 0, 0.35)
+position = Vector2(450, 54)
+scale = Vector2(2, 2)
+texture = ExtResource("9_peixe")
+
+[node name="Peixe2" type="Sprite2D" parent="Painel/Conteudo/Placar"]
+modulate = Color(0, 0, 0, 0.35)
+position = Vector2(484, 54)
+scale = Vector2(2, 2)
+texture = ExtResource("9_peixe")
+
+[node name="Peixe3" type="Sprite2D" parent="Painel/Conteudo/Placar"]
+modulate = Color(0, 0, 0, 0.35)
+position = Vector2(518, 54)
+scale = Vector2(2, 2)
+texture = ExtResource("9_peixe")
+
+[node name="Distancia" type="ProgressBar" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "Quão longe o peixe está (cheia = longe). Some quando não tem peixe fisgado."
+visible = false
+offset_left = 16.0
+offset_top = 44.0
+offset_right = 156.0
+offset_bottom = 52.0
+mouse_filter = 2
+theme_type_variation = &"BarraJogo"
+theme_override_styles/fill = SubResource("StyleBoxFlat_azul")
+max_value = 1.0
+step = 0.0
+show_percentage = false
+
+[node name="RotuloDistancia" type="Label" parent="Painel/Conteudo/Distancia"]
+editor_description = "Legenda da barra de distância."
+offset_top = -14.0
+offset_right = 140.0
+theme_type_variation = &"Rotulo"
+theme_override_font_sizes/font_size = 8
+text = "Peixe longe"
+horizontal_alignment = 1
