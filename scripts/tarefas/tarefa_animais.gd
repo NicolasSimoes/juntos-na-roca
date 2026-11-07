@@ -61,7 +61,7 @@ func atualizar(_delta: float) -> void:
 		Sons.tocar("vaca")
 		fazenda.hud.falar("A Mimosa está feliz! Agora vamos tirar o leite.")
 		await get_tree().create_timer(1.5).timeout
-		var mj := MinijogoOrdenha.new()
+		var mj: MinijogoOrdenha = preload("res://cenas/minijogos/minijogo_ordenha.tscn").instantiate()
 		abrir_minijogo(mj)
 		mj.concluido.connect(_ordenhou)
 

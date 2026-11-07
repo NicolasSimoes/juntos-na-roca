@@ -18,7 +18,7 @@ func papeis() -> Array:
 
 func comecar(a: Jogador, b: Jogador) -> void:
 	super.comecar(a, b)
-	var mj := MinijogoTrator.new()
+	var mj: MinijogoTrator = preload("res://cenas/minijogos/minijogo_trator.tscn").instantiate()
 	abrir_minijogo(mj)
 	mj.concluido.connect(finalizar)
 
