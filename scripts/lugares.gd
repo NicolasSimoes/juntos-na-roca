@@ -3,19 +3,19 @@ class_name Lugares
 ## A tela tem 640 x 360. Mudou algo de lugar? Mude aqui.
 
 # Casa da Vovó
-const CASA := Vector2(288, 4)              # canto de cima/esquerda do desenho
+const CASA := Vector2(281, 18)             # canto de cima/esquerda do desenho (casa do pacote, 75 x 48)
 const PORTA := Vector2(320, 78)            # estação de dormir
 const VOVO := Vector2(366, 64)
 const INICIO_J1 := Vector2(304, 100)
 const INICIO_J2 := Vector2(336, 100)
-const PILHA_LENHA := Vector2(380, 62)
+const PILHA_LENHA := Vector2(396, 62)
 const DESTINO_LENHA := Rect2(352, 34, 64, 52)
-const CHAMINE := Vector2(340, 10)
+const CHAMINE := Vector2(344, 22)          # de onde sai a fumaça (no telhado)
 
 # Poço (quintal)
-const POCO := Vector2(256, 124)            # canto do desenho (16 x 16)
+const POCO := Vector2(248, 120)            # canto do desenho (poço de pedra, 32 x 32)
 const POCO_CENTRO := Vector2(264, 136)
-const ESTACAO_POCO := Vector2(264, 158)
+const ESTACAO_POCO := Vector2(264, 166)
 const BALDE := Vector2(290, 140)
 
 # Mata
@@ -26,7 +26,7 @@ const ESTACAO_LENHA := Vector2(144, 102)
 const TABUAS := Vector2(108, 94)
 
 # Galpão e lama
-const GALPAO := Vector2(32, 104)
+const GALPAO := Vector2(32, 104)           # canto do desenho (64 x 48)
 const CORDA := Vector2(60, 164)
 const SACO_MILHO := Vector2(78, 164)
 const TRATOR_ATOLADO := Vector2(128, 132)

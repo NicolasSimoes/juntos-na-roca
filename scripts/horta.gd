@@ -64,18 +64,18 @@ func _draw() -> void:
 		var dados := cova(i)
 		var fase: int = dados["fase"]
 		var t := tipo(i)
+		# Plantas do pacote Super Retro World (recortes em assets/recortes/mapa/):
+		# fase 1 = semente; 2, 3 e 4 = crescendo até ficar madura.
 		var caminho := ""
 		match fase:
 			1:
-				caminho = "res://assets/sprites/extras/semente.png"
+				caminho = "res://assets/recortes/mapa/semente.tres"
 			2, 3, 4:
-				var n := fase - 1
-				if t == "milho":
-					caminho = "res://assets/sprites/objetos/milho_fase%d.png" % n
-				else:
-					caminho = "res://assets/sprites/extras/%s_fase%d.png" % [t, n]
+				caminho = "res://assets/recortes/mapa/%s_fase%d.tres" % [t, fase]
 		if caminho != "":
-			draw_texture(Jogo.tex(caminho), c - Vector2(8, 10))
+			var planta := Jogo.tex(caminho)
+			# o pé da planta fica 6 px abaixo do centro da cova (plantas altas crescem para cima)
+			draw_texture(planta, c + Vector2(-8, 6 - planta.get_height()))
 		if dados["mato"]:
 			draw_texture(Jogo.tex("res://assets/sprites/extras/mato.png"), c - Vector2(8, 8))
 		if mostrar_sede and fase in [2, 3] and not dados["molhado"]:

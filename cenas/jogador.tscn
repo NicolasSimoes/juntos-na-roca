@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/jogador.gd" id="1_jogador"]
+[ext_resource type="Texture2D" path="res://assets/recortes/mapa/anel_pes.png" id="2_anel"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pes"]
 size = Vector2(10, 6)
@@ -11,13 +12,20 @@ collision_mask = 1
 motion_mode = 1
 script = ExtResource("1_jogador")
 
+[node name="Anel" type="Sprite2D" parent="."]
+editor_description = "Anel sob os pés na cor do jogador (laranja = 1, azul = 2). A cor é posta no _ready pelo script."
+position = Vector2(0, -1)
+texture = ExtResource("2_anel")
+
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
-position = Vector2(0, -12)
+editor_description = "O neto. As animações (parado_*, anda_*, comemora) vêm de assets/animacoes/neto_N.tres."
+position = Vector2(0, -10)
 
 [node name="Colisao" type="CollisionShape2D" parent="."]
 position = Vector2(0, -3)
 shape = SubResource("RectangleShape2D_pes")
 
 [node name="Item" type="Sprite2D" parent="."]
+editor_description = "O que o neto está carregando, em cima da cabeça."
 visible = false
-position = Vector2(0, -30)
+position = Vector2(0, -27)

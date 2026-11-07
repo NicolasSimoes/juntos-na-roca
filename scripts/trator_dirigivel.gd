@@ -30,9 +30,9 @@ func _ready() -> void:
 	_sprite.position = Vector2(0, -12)
 	add_child(_sprite)
 	_cabeca = Sprite2D.new()
-	_cabeca.texture = load("res://assets/sprites/personagens/p%d_lado_parado.png" % motorista)
+	_cabeca.texture = Aparencia.neto(motorista, "lado")
 	_cabeca.region_enabled = true
-	_cabeca.region_rect = Rect2(0, 1, 16, 11)
+	_cabeca.region_rect = Rect2(0, 0, 16, 11)   # só a cabeça e os ombros
 	_cabeca.position = Vector2(-5, -14)
 	_cabeca.show_behind_parent = true
 	_sprite.add_child(_cabeca)
