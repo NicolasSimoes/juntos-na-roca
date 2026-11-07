@@ -59,7 +59,7 @@ func ponto_guia() -> Variant:
 
 func comecar(a: Jogador, b: Jogador) -> void:
 	super.comecar(a, b)
-	var mj := MinijogoPoco.new()
+	var mj: MinijogoPoco = preload("res://cenas/minijogos/minijogo_poco.tscn").instantiate()
 	abrir_minijogo(mj)
 	mj.concluido.connect(finalizar)
 

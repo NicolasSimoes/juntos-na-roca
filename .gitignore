@@ -3,3 +3,6 @@
 
 # Capturas de tela para comparar antes/depois
 capturas/
+
+# Worktrees dos agentes do Claude Code
+.claude/
