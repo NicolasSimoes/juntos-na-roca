@@ -71,7 +71,7 @@ func _montar_logo() -> void:
 	_logo_mat.set_shader_parameter("altura", 60.0)
 	_logo.material = _logo_mat
 	add_child(_logo)
-	_sub = Fontes.rotulo("~ um jogo para fazer em dupla ~", Fontes.pixel(700), 13, Color(1, 0.95, 0.8), 4, Color(0.25, 0.12, 0.05))
+	_sub = Fontes.rotulo("~ para jogar em dupla ~", Fontes.pixel(500), 13, Color(1, 0.95, 0.8), 4, Color(0.25, 0.12, 0.05))
 	_sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_sub.position = Vector2(0, 98)
 	_sub.size = Vector2(640, 20)

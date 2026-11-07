@@ -123,14 +123,14 @@ func _ready() -> void:
 	_final.material = _final_mat
 	_final.modulate.a = 0.0
 	add_child(_final)
-	_aperte = Fontes.rotulo("Aperte Espaço ou Enter!", Fontes.pixel(700), 16, Color(1, 0.97, 0.85), 4, Color(0.2, 0.1, 0.05))
+	_aperte = Fontes.rotulo("Aperte Espaço ou Enter!", Fontes.pixel(500), 16, Color(1, 0.97, 0.85), 4, Color(0.2, 0.1, 0.05))
 	_aperte.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_aperte.position = Vector2(0, 92)
 	_aperte.size = Vector2(640, 20)
 	_aperte.modulate.a = 0.0
 	add_child(_aperte)
 
-	_pular = Fontes.rotulo("Espaço ou Enter: pular", Fontes.pixel(700), 10, Color(1, 1, 1, 0.75), 3, Color(0.1, 0.08, 0.15))
+	_pular = Fontes.rotulo("Espaço ou Enter: pular", Fontes.pixel(500), 10, Color(1, 1, 1, 0.75), 3, Color(0.1, 0.08, 0.15))
 	_pular.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_pular.position = Vector2(440, 6)
 	_pular.size = Vector2(194, 14)
