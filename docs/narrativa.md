@@ -42,3 +42,23 @@ Público: duplas de crianças de **10 anos**. Pergunta da análise: em cada mome
 - Teste: nenhuma fala passa de 9 palavras.
 - Revisão independente: alguém (ou um agente) que não escreveu os textos joga as capturas e responde,
   para cada tarefa: "a criança sabe por quê, o quê e como?".
+
+## Revisão independente (08/11/2026)
+
+Um revisor que não escreveu os textos avaliou as telas e os textos: **nota 7/10**. Bom no
+"por quê" e no "o quê"; o "como" tinha furos. O que foi corrigido:
+
+| Problema apontado | Correção |
+|---|---|
+| Pesca dizia "puxe a linha" (parece um aperto só), mas a regra exige apertar ~12 vezes | "APERTE muitas vezes para puxar a linha"; apertar a rede antes do pulo agora avisa "Espere o peixe pular!" |
+| "Puçá", "píer", "arar", "desatolar" são difíceis | rede, lago, **afofar a terra**, **tirar o trator da lama**; "Lenha" virou "Serrar a lenha" |
+| O cartão mostrava WASD até onde ninguém anda | cada papel mostra só as teclas que usa (só AÇÃO, lados + AÇÃO ou andar + AÇÃO), com o gesto ("segure", "várias vezes") |
+| A segunda parte da tarefa ("Depois:") passava despercebida | faixa amarela com ícone (tora, balde de leite, jerimum gigante) |
+| Mimosa, galinha e peixe sem rosto no cartão | figura ao lado do balão da Vovó |
+| Poço: "buraco igual", "a marca" vagos | "Leve a tábua ao buraco do mesmo formato" / "Martele quando a barrinha estiver no prego" |
+| Serra: "agarrou..." confunde | "Travou! Espere." |
+| Festa: a mesa não dizia o que era; "Sem fotos desta vez" é negativo | "Tudo o que vocês colheram!" / "Que festa linda!" |
+| Dia 1 com 6 falas antes de jogar; dia 4 sem dizer por onde começar | dia 1 com 5 falas; dia 4 termina com "Escolham por onde começar!" |
+
+Ficou para depois: a tampa do poço ainda parece uma parede de tijolos (arte do minijogo); o ícone do
+papel "empurrar" do trator é um quadrado de lama; "Como jogar" não tem um cartão de SEGURAR × APERTAR.

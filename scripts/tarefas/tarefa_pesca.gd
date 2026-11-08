@@ -12,7 +12,7 @@ func posicao_estacao() -> Vector2:
 
 
 func papeis() -> Array:
-	return ["puxar a linha", "puçá", tex("res://assets/sprites/extras/vara.png"),
+	return ["puxar a linha", "rede", tex("res://assets/sprites/extras/vara.png"),
 			tex("res://assets/sprites/extras/puca.png")]
 
 

@@ -83,7 +83,7 @@ func passo(delta: float, puxou_agora: bool, mover_puca: float, pegou_agora: bool
 			if dist <= PERTO_DO_PIER:
 				estado = "pulando"
 				pulo = 0.0
-				pulou.emit("Pulou! Pegue com o puçá!")
+				pulou.emit("Pulou! Pegue com a rede!")
 		"pulando":
 			pulo += delta
 			if pegou_agora:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/telas/cartao_missao.gd" id="1_script"]
 [ext_resource type="Theme" path="res://assets/tema/tema_telas.tres" id="2_tema"]
@@ -63,6 +63,22 @@ corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="faixa"]
+content_margin_left = 8.0
+content_margin_top = 1.0
+content_margin_right = 8.0
+content_margin_bottom = 1.0
+bg_color = Color(1, 0.86, 0.35, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.55, 0.32, 0.08, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 
 [node name="CartaoMissao" type="CanvasLayer"]
 layer = 8
@@ -129,7 +145,7 @@ editor_description = "Balão da Vovó com o POR QUÊ da tarefa."
 layout_mode = 0
 offset_left = 110.0
 offset_top = 44.0
-offset_right = 578.0
+offset_right = 528.0
 offset_bottom = 90.0
 theme_override_styles/panel = SubResource("balao")
 
@@ -143,6 +159,17 @@ text = "Sem poço, não tem água para nada!"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
+
+[node name="Imagem" type="TextureRect" parent="Raiz"]
+unique_name_in_owner = true
+editor_description = "Figura do que a Vovó está falando (vaca, galinha, peixe). Vem de Textos.MISSOES[...]['imagem']."
+layout_mode = 0
+offset_left = 534.0
+offset_top = 42.0
+offset_right = 580.0
+offset_bottom = 92.0
+expand_mode = 1
+stretch_mode = 5
 
 [node name="RaboBalao" type="Polygon2D" parent="Raiz"]
 editor_description = "Rabinho do balão apontando para a Vovó."
@@ -283,17 +310,34 @@ theme_override_font_sizes/font_size = 13
 text = "Aperte Enter!"
 horizontal_alignment = 1
 
-[node name="Depois" type="Label" parent="Raiz"]
+[node name="FaixaDepois" type="PanelContainer" parent="Raiz"]
 unique_name_in_owner = true
-editor_description = "Segunda parte da tarefa, quando existe (ex.: depois de serrar, levar a tora)."
+editor_description = "Segunda parte da tarefa, quando existe (ex.: depois de serrar, levar a tora): faixa amarela com ícone."
 layout_mode = 0
-offset_left = 40.0
-offset_top = 310.0
-offset_right = 600.0
+offset_left = 120.0
+offset_top = 306.0
+offset_right = 520.0
 offset_bottom = 328.0
-theme_override_colors/font_color = Color(0.4, 0.22, 0.06, 1)
+theme_override_styles/panel = SubResource("faixa")
+
+[node name="Linha" type="HBoxContainer" parent="Raiz/FaixaDepois"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 6
+
+[node name="ImagemDepois" type="TextureRect" parent="Raiz/FaixaDepois/Linha"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(20, 18)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Depois" type="Label" parent="Raiz/FaixaDepois/Linha"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.35, 0.18, 0.04, 1)
 theme_override_constants/outline_size = 0
-theme_override_font_sizes/font_size = 13
+theme_override_font_sizes/font_size = 14
 text = "Depois: levem a tora juntos até a casa."
 horizontal_alignment = 1
 
@@ -301,9 +345,9 @@ horizontal_alignment = 1
 editor_description = "Lembra que os dois precisam confirmar."
 layout_mode = 0
 offset_left = 40.0
-offset_top = 328.0
+offset_top = 330.0
 offset_right = 600.0
-offset_bottom = 348.0
+offset_bottom = 350.0
 theme_override_colors/font_color = Color(0.55, 0.3, 0.05, 1)
 theme_override_constants/outline_size = 0
 theme_override_font_sizes/font_size = 13

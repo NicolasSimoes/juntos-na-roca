@@ -32,7 +32,10 @@ func abrir(id: String, na: int, nb: int, icone_a: Texture2D, icone_b: Texture2D)
 	_titulo.text = Jogo.NOMES.get(id, "")
 	_porque.text = m.get("porque", "")
 	_depois.text = m.get("depois", "")
-	_depois.visible = _depois.text != ""
+	%FaixaDepois.visible = _depois.text != ""
+	%ImagemDepois.texture = _textura(m.get("imagem_depois", ""))
+	# figura do que a Vovó está falando (a vaca, a galinha, o peixe...)
+	%Imagem.texture = _textura(m.get("imagem", ""))
 	%Vovo.texture = Aparencia.vovo("frente")
 	_quem = {"a": na, "b": nb}
 	var icones := {"a": icone_a, "b": icone_b}
@@ -44,6 +47,7 @@ func abrir(id: String, na: int, nb: int, icone_a: Texture2D, icone_b: Texture2D)
 		_icones[papel].texture = icones[papel]
 		_verbos[papel].text = m.get(papel, "")
 		_teclas[papel].numero = n
+		_so_as_teclas_usadas(_teclas[papel], m.get("teclas_" + papel, "andar"), m.get("gesto_" + papel, ""))
 		_status[papel].text = "Aperte %s!" % Jogo.tecla_acao(n)
 		# a borda do cartão fica na cor de quem faz aquele papel
 		var estilo := (_cartoes[papel].get_theme_stylebox("panel") as StyleBoxFlat).duplicate() as StyleBoxFlat
@@ -52,6 +56,22 @@ func abrir(id: String, na: int, nb: int, icone_a: Texture2D, icone_b: Texture2D)
 		estilo.bg_color.a = 0.95
 		_cartoes[papel].add_theme_stylebox_override("panel", estilo)
 	Sons.tocar("fala")
+
+
+## Mostra só as teclas que aquele papel usa:
+##   "andar" = cruz de andar + AÇÃO;  "lados" = esquerda/direita + AÇÃO;  "acao" = só AÇÃO.
+## O gesto ("segure", "várias vezes") aparece embaixo da tecla de AÇÃO.
+func _so_as_teclas_usadas(teclas: TeclasJogador, modo: String, gesto: String) -> void:
+	for nome in ["Cima", "Baixo"]:
+		teclas.get_node(nome).visible = modo == "andar"
+	for nome in ["Esquerda", "Direita", "RotuloAndar"]:
+		teclas.get_node(nome).visible = modo != "acao"
+	(teclas.get_node("RotuloAndar") as Label).text = "lados" if modo == "lados" else "andar"
+	(teclas.get_node("RotuloAcao") as Label).text = gesto if gesto != "" else "ação"
+
+
+func _textura(caminho: String) -> Texture2D:
+	return null if caminho == "" else Jogo.tex(caminho)
 
 
 func _process(delta: float) -> void:

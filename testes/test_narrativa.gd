@@ -47,7 +47,7 @@ func test_cartao_mostra_o_papel_de_cada_jogador() -> void:
 	afirmar_igual(c.get_node("%VerboA").text, Textos.MISSOES["trator"]["a"])
 	afirmar_igual(c.get_node("%Porque").text, Textos.MISSOES["trator"]["porque"])
 	afirmar_igual(c.get_node("%StatusA").text, "Aperte Enter!", "o jogador 2 aperta Enter")
-	afirmar(not c.get_node("%Depois").visible, "trator não tem segunda parte")
+	afirmar(not c.get_node("%FaixaDepois").visible, "trator não tem segunda parte")
 	c.free()
 
 
@@ -65,5 +65,5 @@ func test_cartao_so_fecha_quando_os_dois_confirmam() -> void:
 	c.confirmar(2)
 	await arvore.create_timer(0.7).timeout
 	afirmar(fechou[0], "fecha quando os dois confirmam")
-	afirmar(c.get_node("%Depois").visible, "lenha tem segunda parte")
+	afirmar(c.get_node("%FaixaDepois").visible, "lenha tem segunda parte")
 	c.free()
