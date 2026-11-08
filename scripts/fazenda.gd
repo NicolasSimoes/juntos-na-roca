@@ -8,6 +8,7 @@ extends Node2D
 ## (horta, netos, galinhas, tarefas e o HUD).
 
 const CENA_JOGADOR := preload("res://cenas/jogador.tscn")
+const CENA_CARTAO := preload("res://cenas/objetos/cartao_missao.tscn")
 const POCO_CONSERTADO := preload("res://assets/recortes/mapa/poco_consertado.tres")
 
 const TAREFAS := {
@@ -174,6 +175,18 @@ func _comecar_tarefa(a: Jogador, b: Jogador, t: Tarefa) -> void:
 		return
 	tarefa_atual = t
 	Jogo.ultimo_papel_a = a.numero
+	# Antes de toda tarefa, o cartão de missão: por quê, o que cada um faz e
+	# com quais teclas. Só segue quando os dois apertam AÇÃO.
+	ocupado = true
+	travar(true)
+	var papeis := t.papeis()
+	var cartao: CartaoMissao = CENA_CARTAO.instantiate()
+	add_child(cartao)
+	cartao.abrir(t.id, a.numero, b.numero, papeis[2], papeis[3])
+	await cartao.pronto
+	cartao.queue_free()
+	travar(false)
+	ocupado = false
 	t.comecar(a, b)
 
 
@@ -205,6 +218,7 @@ func _tarefa_terminou(t: Tarefa) -> void:
 	ocupado = false
 	if Jogo.dia_completo():
 		await hud.falar(Textos.ELOGIOS.get(t.id, "Muito bem!"))
+		await hud.falar(Textos.NOITE.get(Jogo.dia, ""))
 		hud.falar(Textos.HORA_DE_DORMIR)
 		estacao_dormir.ativa = true
 	else:

@@ -17,7 +17,10 @@ static func pixel(peso := 400) -> Font:
 	if not _pixel.has(peso):
 		var v := FontVariation.new()
 		v.base_font = load("res://assets/fontes/PixelifySans.ttf")
-		v.variation_opentype = {TextServerManager.get_primary_interface().name_to_tag("wght"): peso}
+		var ts := TextServerManager.get_primary_interface()
+		v.variation_opentype = {ts.name_to_tag("wght"): peso}
+		# sem ligaduras: a Pixelify junta "fi" num desenho só e "fica" vira "Aca"
+		v.opentype_features = {ts.name_to_tag("liga"): 0}
 		_pixel[peso] = v
 	return _pixel[peso]
 

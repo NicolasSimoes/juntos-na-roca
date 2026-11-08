@@ -5,7 +5,8 @@
 
 [sub_resource type="FontVariation" id="pixel_negrito"]
 base_font = ExtResource("1_pixel")
-variation_opentype = {2003265652: 500}
+variation_opentype = {2003265652: 400}
+opentype_features = {1818847073: 0}
 
 [sub_resource type="StyleBoxFlat" id="cartao"]
 content_margin_left = 8.0
