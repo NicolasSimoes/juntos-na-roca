@@ -33,14 +33,41 @@ func test_creditos_listam_a_equipe() -> void:
 	cena.free()
 
 
-func test_quadrinhos_tem_quatro_quadros_e_vestem_os_personagens() -> void:
+func test_quadrinhos_tem_oito_quadros_e_vestem_os_personagens() -> void:
 	var cena := _abrir("res://cenas/quadrinhos.tscn")
 	await arvore.process_frame
-	for i in 4:
+	for i in 8:
 		afirmar(cena.get_node_or_null("%%Quadro%d" % (i + 1)) != null, "falta o Quadro%d" % (i + 1))
-	afirmar(cena.get_node("%PuloA").texture == Aparencia.neto(1, "lado"), "o neto 1 deveria vir da Aparencia")
-	afirmar(cena.get_node("%PuloB").texture == Aparencia.neto(2, "lado"), "o neto 2 deveria vir da Aparencia")
+	afirmar(cena.get_node("%NetoA").texture == Aparencia.neto(1, "frente"), "o neto 1 deveria vir da Aparencia")
+	afirmar(cena.get_node("%NetoB").texture == Aparencia.neto(2, "frente"), "o neto 2 deveria vir da Aparencia")
 	cena._saindo = true
+	cena.free()
+
+
+func test_quadrinhos_convite_so_segue_quando_os_dois_topam() -> void:
+	var cena := _abrir("res://cenas/quadrinhos.tscn")
+	await arvore.process_frame
+	cena._atual = 6
+	cena._mostrar_proximo()   # abre o quadro 8 (o convite)
+	afirmar(cena._convite, "o quadro 8 deveria esperar os dois")
+	cena.topar(1)
+	cena.topar(1)              # apertar de novo não conta duas vezes
+	afirmar(not cena._comemorando, "só um topou: ainda não pode seguir")
+	afirmar_igual(cena.get_node("%Status1").text, "Topo!")
+	afirmar_igual(cena.get_node("%Status2").text, "Topa?")
+	cena.topar(2)
+	afirmar(cena._comemorando, "os dois toparam: deveria comemorar")
+	cena._saindo = true
+	cena.free()
+
+
+func test_quadrinhos_esc_pula_tudo() -> void:
+	var cena := _abrir("res://cenas/quadrinhos.tscn")
+	await arvore.process_frame
+	Input.action_press("pausa")
+	await arvore.process_frame
+	Input.action_release("pausa")
+	afirmar(cena._saindo, "Esc deveria pular os quadrinhos")
 	cena.free()
 
 
