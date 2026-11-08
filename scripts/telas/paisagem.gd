@@ -69,21 +69,20 @@ func _faixa_tinta(t: Texture2D, y: float, velocidade: float, tinta: Color) -> vo
 
 
 func _gente(tinta: Color) -> void:
-	var base := "res://assets/sprites/personagens/"
-	var vovo := Jogo.tex(base + "vovo_zefa.png")
+	# Aparencia decide a imagem; a origem fica nos pés, qualquer que seja o tamanho
+	var vovo := Aparencia.vovo()
 	var y := CHAO + descida
 	draw_set_transform(Vector2(434, y), 0.0, Vector2(2, 2))
-	draw_texture(vovo, Vector2(-8, -24 + (0.5 if fmod(_tempo, 1.4) < 0.7 else 0.0)), tinta)
+	draw_texture(vovo, Vector2(-vovo.get_width() / 2.0, -vovo.get_height() + (0.5 if fmod(_tempo, 1.4) < 0.7 else 0.0)), tinta)
 	# os netos comemoram de vez em quando
 	var ciclo := fmod(_tempo, 6.0)
 	for item in [1, 2]:
 		var n: int = item
 		var x := 512.0 + (n - 1) * 34.0
-		var quadro := "p%d_baixo_parado.png" % n
+		var neto := Aparencia.neto(n, "frente")
 		var pulo := 0.0
 		if ciclo > 4.6:
-			quadro = "p%d_comemora%d.png" % [n, 1 + int(_tempo * 7.0) % 2]
 			pulo = absf(sin((ciclo - 4.6) * 9.0)) * 6.0
 		draw_set_transform(Vector2(x, y - pulo), 0.0, Vector2(2, 2))
-		draw_texture(Jogo.tex(base + quadro), Vector2(-8, -24), tinta)
+		draw_texture(neto, Vector2(-neto.get_width() / 2.0, -neto.get_height()), tinta)
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)

@@ -4,7 +4,7 @@ extends Tarefa
 
 
 func _init() -> void:
-	dica = "Primeiro a semente, depois a água! Parem em cima da cova e apertem AÇÃO."
+	dica = "Primeiro a semente. Depois a água!"
 
 
 func posicao_estacao() -> Vector2:
@@ -20,7 +20,7 @@ func comecar(a: Jogador, b: Jogador) -> void:
 	super.comecar(a, b)
 	a.segurar("semente", tex("res://assets/sprites/extras/semente.png"))
 	b.segurar("regador", tex("res://assets/sprites/objetos/regador.png"))
-	fazenda.hud.falar("Jogador %d põe as sementes nas covas. Jogador %d vem atrás regando!" % [a.numero, b.numero])
+	fazenda.hud.falar("Jogador %d planta. Jogador %d rega!" % [a.numero, b.numero])
 
 
 func atualizar(_delta: float) -> void:
@@ -35,7 +35,7 @@ func atualizar(_delta: float) -> void:
 			Sons.tocar("plantar")
 			progresso()
 		else:
-			fazenda.hud.aviso("Essa cova já tem semente!")
+			fazenda.hud.aviso("Já tem semente aqui!")
 	if Jogo.apertou(papel_b.numero) and ib >= 0:
 		var c := horta.cova(ib)
 		if c["fase"] == 1:

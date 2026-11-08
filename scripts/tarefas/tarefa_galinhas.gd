@@ -4,7 +4,7 @@ extends Tarefa
 
 
 func _init() -> void:
-	dica = "Sozinho, ela foge! Cheguem os dois bem pertinho dela, ao mesmo tempo."
+	dica = "Sozinho, ela foge! Cheguem os dois juntos."
 
 
 func posicao_estacao() -> Vector2:
@@ -20,7 +20,7 @@ func comecar(a: Jogador, b: Jogador) -> void:
 	super.comecar(a, b)
 	for g in fazenda.galinhas:
 		g.pode_cercar = true
-	fazenda.hud.falar("Cheguem os dois pertinho de uma galinha. Ela se acalma e vai com vocês até o cercado!")
+	fazenda.hud.falar("Cheguem os dois perto da galinha!")
 
 
 func atualizar(_delta: float) -> void:

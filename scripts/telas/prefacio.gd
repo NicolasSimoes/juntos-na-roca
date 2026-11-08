@@ -2,32 +2,39 @@ extends Control
 ## Prefácio inspirado na abertura de Star Wars, mas na roça: o dia amanhecendo,
 ## o galo cantando, a frase "Há pouco tempo...", o título que vai embora para o
 ## horizonte e o texto amarelo deitado no pasto, indo em direção à casa da Vovó.
-## No fim a câmera chega na casa, onde a Vovó e os netos esperam.
+## No fim a câmera chega na casa, onde a Vovó e os netos esperam,
+## e o jogo segue para os quadrinhos (cenas/quadrinhos.tscn).
+## Feito para crianças de 10 anos: frases curtas, letras grandes e devagar.
 ## AÇÃO (ou Esc) pula a qualquer momento.
 
-const INTRO := "Há pouco tempo, numa roça não muito,\nmuito distante...."
+const INTRO := "Há pouco tempo, numa roça\nnão muito distante..."
 
 const EPISODIO := "Episódio I"
 const TITULO := "A FESTA DA COLHEITA"
+## Uma ideia por frase. Cada frase vira um bloco no pasto.
 const PARAGRAFOS := [
-	"É tempo de férias! Dois netos chegaram para passar cinco dias no sítio da Vovó Zefa.",
-	"Mas a roça está triste e sem cor. O poço quebrou, o trator atolou, as galinhas fugiram e a horta nem foi plantada.",
-	"Sozinha, a Vovó não dá conta de tanto trabalho. E a grande Festa da Colheita está chegando!",
-	"Por aqui, ninguém faz nada sozinho: um segura e o outro martela, um acelera e o outro empurra.",
-	"A missão dos dois é fazer as tarefas de cada dia JUNTOS, encher a cesta da festa e trazer as cores de volta para a fazenda...",
-	"...e, no último dia, levar o jerimum gigante até a porteira!",
+	"Dois netos chegaram para as férias na fazenda da Vovó Zefa.",
+	"Mas a fazenda perdeu todas as cores!",
+	"O poço quebrou. O trator atolou. As galinhas fugiram.",
+	"Sozinho, ninguém consegue arrumar tudo.",
+	"Mas juntos, os dois conseguem!",
+	"Em cinco dias, eles vão trazer as cores de volta...",
+	"...e fazer a grande Festa da Colheita!",
 ]
+## Tamanho das letras no pasto (a perspectiva diminui com a distância).
+const TAMANHO_TEXTO := 58
 
 # linha do tempo (segundos). A fanfarra entra forte aos 7,4 s.
+# O texto roda mais devagar que antes: a câmera só chega na casa aos 62 s.
 const T_MUSICA := 0.2
 const T_GALO := 1.0
-const T_INTRO := [0.8, 1.6, 5.6, 6.4]   # aparece, fica, começa a sumir, sumiu
+const T_INTRO := [0.8, 1.6, 6.4, 7.2]   # aparece, fica, começa a sumir, sumiu
 const T_LOGO := 7.4
 const T_LETREIRO := 8.5
-const T_CHEGAR := 53.0                   # a câmera chega na casa da Vovó
+const T_CHEGAR := 62.0                   # a câmera chega na casa da Vovó
 const DUR_CHEGAR := 4.0
-const T_FIM := 57.0
-const T_SAIR_SOZINHO := 72.0
+const T_FIM := 66.0
+const T_SAIR_SOZINHO := 84.0
 
 # o chão em perspectiva (os mesmos números vão para o shader letreiro.gdshader)
 const HORIZONTE := 116.0
@@ -90,8 +97,10 @@ func _ready() -> void:
 	_paisagem.modulate.a = 0.0
 	add_child(_paisagem)
 
-	_intro = Fontes.rotulo(INTRO, Fontes.pixel(700), 18, Color(0.7, 0.93, 1.0), 6, Color(0.08, 0.1, 0.26))
-	_intro.position = Vector2(110, 26)
+	_intro = Fontes.rotulo(INTRO, Fontes.pixel(500), 22, Color(0.7, 0.93, 1.0), 6, Color(0.08, 0.1, 0.26))
+	_intro.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_intro.position = Vector2(0, 24)
+	_intro.size = Vector2(640, 60)
 	_intro.modulate.a = 0.0
 	add_child(_intro)
 
@@ -114,16 +123,17 @@ func _ready() -> void:
 	_final.material = _final_mat
 	_final.modulate.a = 0.0
 	add_child(_final)
-	var texto_aperte := "Aperte AÇÃO para voltar ao menu" if Jogo.prefacio_volta_ao_menu else "Aperte AÇÃO para começar!"
-	_aperte = Fontes.rotulo(texto_aperte, Fontes.pixel(700), 14, Color(1, 0.97, 0.85), 4, Color(0.2, 0.1, 0.05))
+	_aperte = Fontes.rotulo("Aperte Espaço ou Enter!", Fontes.pixel(500), 16, Color(1, 0.97, 0.85), 4, Color(0.2, 0.1, 0.05))
 	_aperte.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_aperte.position = Vector2(0, 92)
 	_aperte.size = Vector2(640, 20)
 	_aperte.modulate.a = 0.0
 	add_child(_aperte)
 
-	_pular = Fontes.rotulo("AÇÃO: pular", Fontes.pixel(), 9, Color(1, 1, 1, 0.7), 3, Color(0.1, 0.08, 0.15))
-	_pular.position = Vector2(574, 6)
+	_pular = Fontes.rotulo("Espaço ou Enter: pular", Fontes.pixel(500), 10, Color(1, 1, 1, 0.75), 3, Color(0.1, 0.08, 0.15))
+	_pular.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_pular.position = Vector2(440, 6)
+	_pular.size = Vector2(194, 14)
 	_pular.modulate.a = 0.0
 	add_child(_pular)
 
@@ -169,16 +179,16 @@ func _montar_letreiro() -> void:
 	_coluna.custom_minimum_size = Vector2(LARGURA, 0)
 	_coluna.add_theme_constant_override("separation", 34)
 	_sub.add_child(_coluna)
-	var ep := Fontes.rotulo(EPISODIO, Fontes.pixel(700), 40, AMARELO, 10, MARROM)
+	var ep := Fontes.rotulo(EPISODIO, Fontes.pixel(500), 44, AMARELO, 8, MARROM)
 	ep.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_coluna.add_child(ep)
-	var titulo := Fontes.rotulo(TITULO, Fontes.pixel(700), 62, AMARELO, 12, MARROM)
+	var titulo := Fontes.rotulo(TITULO, Fontes.pixel(500), 66, AMARELO, 9, MARROM)
 	titulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_coluna.add_child(titulo)
 	for p in PARAGRAFOS:
-		var l := Fontes.rotulo(p, Fontes.pixel(700), 40, AMARELO, 10, MARROM)
+		var l := Fontes.rotulo(p, Fontes.pixel(500), TAMANHO_TEXTO, AMARELO, 9, MARROM)
 		l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_FILL
+		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		l.add_theme_constant_override("line_spacing", 4)
 		l.custom_minimum_size = Vector2(LARGURA, 0)
 		_coluna.add_child(l)
@@ -228,7 +238,7 @@ func _process(delta: float) -> void:
 		_galo = true
 		Sons.tocar("galo", -4.0)
 
-	_manha = smoothstep(0.0, 50.0, t)
+	_manha = smoothstep(0.0, T_CHEGAR - 3.0, t)
 
 	# 1) a frase azul
 	_intro.modulate.a = _faixa(t, T_INTRO[0], T_INTRO[1], T_INTRO[2], T_INTRO[3])
@@ -400,7 +410,4 @@ func _sair() -> void:
 	tw.tween_property(preto, "color:a", 1.0, 0.6)
 	await tw.finished
 	Sons.parar_musica()
-	if Jogo.prefacio_volta_ao_menu:
-		get_tree().change_scene_to_file("res://cenas/menu_principal.tscn")
-	else:
-		get_tree().change_scene_to_file("res://cenas/tela_inicial.tscn")
+	get_tree().change_scene_to_file("res://cenas/quadrinhos.tscn")

@@ -4,7 +4,7 @@ extends Tarefa
 
 
 func _init() -> void:
-	dica = "Quem tem o puçá segue a sombra do peixe e aperta AÇÃO quando ele pular!"
+	dica = "Sigam a sombra! Peguem quando o peixe pular!"
 
 
 func posicao_estacao() -> Vector2:
@@ -18,7 +18,7 @@ func papeis() -> Array:
 
 func comecar(a: Jogador, b: Jogador) -> void:
 	super.comecar(a, b)
-	var mj := MinijogoPesca.new()
+	var mj: MinijogoPesca = preload("res://cenas/minijogos/minijogo_pesca.tscn").instantiate()
 	abrir_minijogo(mj)
 	mj.concluido.connect(_pescou)
 

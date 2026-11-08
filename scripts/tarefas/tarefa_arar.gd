@@ -8,7 +8,7 @@ var _total := 0
 
 
 func _init() -> void:
-	dica = "Quem está a pé tira as pedras com AÇÃO. O trator ara tudo por onde passa!"
+	dica = "Tirem as pedras! O trator ara a terra."
 
 
 func posicao_estacao() -> Vector2:
@@ -36,7 +36,7 @@ func comecar(a: Jogador, b: Jogador) -> void:
 	fazenda.mundo.add_child(_trator)
 	_trator.arou.connect(_arou)
 	_total = Lugares.CAMPO.size.x * Lugares.CAMPO.size.y
-	fazenda.hud.falar("Jogador %d dirige o trator. Jogador %d tira as pedras do caminho com AÇÃO!" % [a.numero, b.numero])
+	fazenda.hud.falar("Jogador %d dirige. Jogador %d tira as pedras!" % [a.numero, b.numero])
 
 
 func _arou(_bloco: Vector2i) -> void:

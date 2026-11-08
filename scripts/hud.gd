@@ -96,11 +96,8 @@ func _montar_balao() -> void:
 	linha.add_theme_constant_override("separation", 6)
 	_balao.add_child(linha)
 	var rosto := TextureRect.new()
-	var so_rosto := AtlasTexture.new()
-	so_rosto.atlas = load("res://assets/sprites/personagens/vovo_zefa.png")
-	so_rosto.region = Rect2(0, 0, 16, 14)
-	rosto.texture = so_rosto
-	rosto.custom_minimum_size = Vector2(32, 32)
+	rosto.texture = Aparencia.vovo()   # Aparencia decide a imagem da Vovó
+	rosto.custom_minimum_size = Vector2(32, 40)
 	rosto.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	rosto.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	rosto.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -111,11 +108,11 @@ func _montar_balao() -> void:
 	linha.add_child(coluna)
 	var nome := rotulo("Vovó Zefa", 8, Color(0.55, 0.3, 0.6), 0)
 	coluna.add_child(nome)
-	_texto_balao = rotulo("", 9, Color(0.18, 0.12, 0.08), 0)
+	_texto_balao = rotulo("", 11, Color(0.18, 0.12, 0.08), 0)
 	_texto_balao.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_texto_balao.custom_minimum_size = Vector2(360, 0)
 	coluna.add_child(_texto_balao)
-	_dica_acao = rotulo("aperte AÇÃO", 7, Color(0.5, 0.35, 0.2), 0)
+	_dica_acao = rotulo("Espaço / Enter", 8, Color(0.5, 0.35, 0.2), 0)
 	_dica_acao.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_dica_acao.visible = false
 	coluna.add_child(_dica_acao)
@@ -155,12 +152,12 @@ func _montar_pausa() -> void:
 	_pausa.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_pausa.visible = false
 	add_child(_pausa)
-	var t := rotulo("Pausado", 28, Color(1, 0.9, 0.5), 6)
+	var t := rotulo("Pausa", 28, Color(1, 0.9, 0.5), 6)
 	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	t.position = Vector2(0, 140)
 	t.size = Vector2(640, 40)
 	_pausa.add_child(t)
-	var s := rotulo("Esc para voltar  ·  F1 a F5: pular para um dia (para testar)", 9)
+	var s := rotulo("Esc: continuar", 12)
 	s.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	s.position = Vector2(0, 186)
 	s.size = Vector2(640, 20)
@@ -223,7 +220,7 @@ func atualizar() -> void:
 		_cesta.add_child(icone)
 		_cesta.add_child(rotulo(str(qtd), 8))
 	if not algum:
-		_cesta.add_child(rotulo("cesta do time", 8, Color(0.9, 0.85, 0.7)))
+		_cesta.add_child(rotulo("cesta", 8, Color(0.9, 0.85, 0.7)))
 
 
 # ------------------------------------------------------------------ balão da Vovó

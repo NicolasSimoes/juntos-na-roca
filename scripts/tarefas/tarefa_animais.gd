@@ -11,7 +11,7 @@ var _bebedouro_cheio := false
 
 
 func _init() -> void:
-	dica = "Um traz o saco de milho do galpão, o outro traz o balde de água do poço!"
+	dica = "Um traz o milho. O outro, a água!"
 
 
 func posicao_estacao() -> Vector2:
@@ -29,7 +29,7 @@ func comecar(a: Jogador, b: Jogador) -> void:
 	fazenda.mundo.add_child(_saco)
 	_balde = Coletavel.new().configurar("agua", "res://assets/sprites/extras/balde_agua.png", Lugares.BALDE)
 	fazenda.mundo.add_child(_balde)
-	fazenda.hud.falar("Jogador %d traz o milho do galpão. Jogador %d traz a água do poço!" % [a.numero, b.numero])
+	fazenda.hud.falar("Jogador %d: milho do galpão. Jogador %d: água do poço!" % [a.numero, b.numero])
 
 
 func _centro_cocho() -> Vector2:
@@ -59,9 +59,9 @@ func atualizar(_delta: float) -> void:
 	if _cocho_cheio and _bebedouro_cheio:
 		_fase = "ordenha"
 		Sons.tocar("vaca")
-		fazenda.hud.falar("A Mimosa está feliz! Agora vamos tirar o leite.")
+		fazenda.hud.falar("A Mimosa está feliz! Agora, o leite.")
 		await get_tree().create_timer(1.5).timeout
-		var mj := MinijogoOrdenha.new()
+		var mj: MinijogoOrdenha = preload("res://cenas/minijogos/minijogo_ordenha.tscn").instantiate()
 		abrir_minijogo(mj)
 		mj.concluido.connect(_ordenhou)
 

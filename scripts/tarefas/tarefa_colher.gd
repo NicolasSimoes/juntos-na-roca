@@ -7,7 +7,7 @@ var _jerimum: CarregarJuntos
 
 
 func _init() -> void:
-	dica = "Parem em cima das plantas maduras e apertem AÇÃO para colher!"
+	dica = "Parem na planta que brilha e colham!"
 
 
 func posicao_estacao() -> Vector2:
@@ -21,7 +21,7 @@ func papeis() -> Array:
 
 func comecar(a: Jogador, b: Jogador) -> void:
 	super.comecar(a, b)
-	fazenda.hud.falar("Tudo maduro! Colham as plantas que estão brilhando.")
+	fazenda.hud.falar("Tudo maduro! Colham o que brilha.")
 
 
 func atualizar(_delta: float) -> void:
@@ -44,13 +44,13 @@ func atualizar(_delta: float) -> void:
 			return
 	_fase = "jerimum"
 	horta.alvos = {}
-	dica = "Fiquem pertinho um do outro e levem o jerimum até a porteira!"
+	dica = "Fiquem pertinho e levem o jerimum!"
 	_jerimum = CarregarJuntos.new().configurar("res://assets/sprites/objetos/jerimum_gigante.png", Lugares.JERIMUM_GIGANTE, Lugares.DESTINO_FESTA)
 	fazenda.mundo.add_child(_jerimum)
 	_jerimum.entregue.connect(_entregou)
 	_jerimum.caiu.connect(func(): fazenda.hud.aviso("Opa! Fiquem pertinho."))
 	Sons.tocar("acerto")
-	fazenda.hud.falar("Olhem o jerimum gigante! Só sai do lugar com os dois. Levem até a porteira!")
+	fazenda.hud.falar("Jerimum gigante! Levem juntos até a porteira!")
 
 
 func _entregou() -> void:

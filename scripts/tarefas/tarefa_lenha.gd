@@ -2,12 +2,15 @@ extends Tarefa
 ## Dia 1 — Lenha. Os dois serram a tora com a serra de dois cabos,
 ## apertando alternado, e depois carregam a tora juntos até a casa.
 
+## preload carrega a cena uma vez, quando o script é carregado.
+const CENA_SERRA := preload("res://cenas/minijogos/minijogo_serra.tscn")
+
 var _fase := "serrar"
 var _tora: CarregarJuntos
 
 
 func _init() -> void:
-	dica = "Um de cada vez! Olhem a seta: aperta só quem tem a vez."
+	dica = "Um de cada vez! Olhem a seta."
 
 
 func posicao_estacao() -> Vector2:
@@ -21,7 +24,9 @@ func papeis() -> Array:
 
 func comecar(a: Jogador, b: Jogador) -> void:
 	super.comecar(a, b)
-	var mj := MinijogoSerra.new()
+	# A tela do minijogo agora é uma cena montada no editor (com os sprites):
+	# instantiate() cria uma cópia dela, como "new()" fazia com o script.
+	var mj: MinijogoSerra = CENA_SERRA.instantiate()
 	abrir_minijogo(mj)
 	mj.concluido.connect(_serrou)
 
@@ -31,12 +36,12 @@ func _serrou() -> void:
 	overlay = null
 	fazenda.travar(false)
 	_fase = "carregar"
-	dica = "Fiquem pertinho um do outro. Se se afastarem demais, a tora cai!"
+	dica = "Fiquem pertinho, senão a tora cai!"
 	_tora = CarregarJuntos.new().configurar("res://assets/sprites/objetos/tora.png", Lugares.TORA + Vector2(0, 8), Lugares.DESTINO_LENHA)
 	fazenda.mundo.add_child(_tora)
 	_tora.entregue.connect(_entregou)
-	_tora.caiu.connect(func(): fazenda.hud.aviso("Opa, caiu! Fiquem pertinho."))
-	fazenda.hud.falar("Agora levem a tora juntos até o lado da casa. Os dois pertinho dela apertam AÇÃO!")
+	_tora.caiu.connect(func(): fazenda.hud.aviso("Caiu! Fiquem pertinho."))
+	fazenda.hud.falar("Agora levem a tora até a casa. Juntos!")
 
 
 func _entregou() -> void:

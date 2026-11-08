@@ -1,9 +1,14 @@
 extends Node2D
-## A fazenda: monta o mapa, os jogadores e as tarefas do dia e cuida da ordem das coisas:
+## A fazenda: cuida da ordem das coisas no dia:
 ## estação -> tarefa -> foto -> "toca aqui" -> área colorida -> próxima tarefa -> dormir.
+##
+## O MAPA (chão, casa, árvores, cercas, poço, pedras...) é a cena cenas/fazenda.tscn,
+## montada no editor com a arte do pacote Super Retro World. Este script não desenha
+## nada: ele só ajusta o mapa ao dia (_aplicar_estado_do_dia) e cria o que é do dia
+## (horta, netos, galinhas, tarefas e o HUD).
 
 const CENA_JOGADOR := preload("res://cenas/jogador.tscn")
-const SHADER_CINZA := preload("res://assets/shaders/cinza.gdshader")
+const POCO_CONSERTADO := preload("res://assets/recortes/mapa/poco_consertado.tres")
 
 const TAREFAS := {
 	"poco": preload("res://scripts/tarefas/tarefa_poco.gd"),
@@ -18,62 +23,11 @@ const TAREFAS := {
 	"colher": preload("res://scripts/tarefas/tarefa_colher.gd"),
 }
 
-## O chão, como texto (40 x 23 blocos de 16 px).
-## "." e "," = grama   "#" = caminho   "~" = água   "l" = lama   "c" = campo (vira terra arada)
-const MAPA := [
-	",,.,,....,..,,,....,.....,...,.,........",
-	"....,..,,......,.,.......,,,..,.,.,.....",
-	",........,.,...,,,...,..,,,,.,,.,.,.....",
-	",.,.,...,.,,,.,,.........,,.............",
-	".,...,.,..,,....,,.##,.....,......,,....",
-	",...,..,....,..,,..##..,.,....,.,,.....,",
-	".....,,............##..,...,,,.,.....,..",
-	",...,,.....,......,##..........,........",
-	".,,....llll.....,.,##.,,..,......,,,.,,.",
-	".......llll..,..,,.##.....,.,.,,..,...,.",
-	"......#########################...,....,",
-	",,...,#########################....,,...",
-	"........,...,.,.,,,##..,...,,.,.....,.,.",
-	",.,,,......,,....,.##.,,,.......,,,,.,..",
-	"...,..,,,....,...,.##.,,...,......,....,",
-	"..cccccccccc.......##,.,...,..,..,.....,",
-	"..cccccccccc..,.,..##..,...,,...~~~~~~~~",
-	".,cccccccccc#########,.,.....,.~~~~~~~~~",
-	",.cccccccccc#########..,...,.,~~~~~~~~~~",
-	",.cccccccccc,.,....##...,.....~~~~~~~~~~",
-	"..,,......,.,.....,##.........~~~~~~~~~~",
-	".,,...,..,....,,...##,.,,,.,,.~~~~~~~~~~",
-	".....,,..,..........,,,......,.~~~~~~~~~",
-]
-
-const FALAS_DO_DIA := {
-	1: ["Que bom que vocês vieram! Aqui na roça, ninguém faz nada sozinho.",
-		"O poço quebrou e o fogão está sem lenha. A setinha amarela mostra para onde ir.",
-		"Para começar uma tarefa, cada um para em um círculo. A cor da borda é a minha sugestão de quem faz o quê."],
-	2: ["Bom dia! O trator atolou na lama e o campo está cheio de pedras.",
-		"Vamos desatolar o trator e depois arar a terra?"],
-	3: ["Hoje é dia de plantar milho, feijão e jerimum!",
-		"E as galinhas fujonas? Sozinho ninguém pega. Cerquem juntos!"],
-	4: ["As galinhas já botaram ovos! Coloquei na cesta.",
-		"Hoje tem bicho com fome, peixe para pescar e horta pedindo cuidado."],
-	5: ["Chegou o dia da Festa da Colheita!",
-		"Vamos colher tudo e levar o jerimum gigante até a porteira."],
-}
-
-const ELOGIOS := {
-	"poco": "Poço consertado! Agora tem água para tudo.",
-	"lenha": "Que cheirinho! O fogão acendeu e vou fazer bolo de milho.",
-	"trator": "O trator saiu da lama! Juntos vocês têm muita força.",
-	"arar": "A terra está arada. Amanhã a gente planta!",
-	"plantar": "Tudo plantado e regado. Logo, logo cresce!",
-	"galinhas": "As galinhas estão em casa. Obrigada, meus amores!",
-	"animais": "A Mimosa está feliz. Leite fresquinho!",
-	"pesca": "Que peixes bonitos! Já tem almoço para a festa.",
-	"cuidar_horta": "A horta está linda. Amanhã é dia de colher!",
-}
-
-var chao: TileMapLayer
-var mundo: Node2D
+## Camada do campo (terra arada). As tarefas de arar e plantar mexem nela:
+## bloco 2 = terra arada, 5 = arada e molhada (vazio = campo sem arar).
+@onready var chao: TileMapLayer = %Campo
+## Onde ficam as coisas que andam ou mudam (netos, tarefas, pedras, horta...).
+@onready var mundo: Node2D = %Mundo
 var hud: Hud
 var horta: Horta
 var jogadores: Array[Jogador] = []
@@ -85,44 +39,37 @@ var estacao_dormir: Estacao
 var ocupado := true
 
 var _zonas := {}
-var _seta: Sprite2D
-var _poco: Sprite2D
-var _trator_parado: Sprite2D
-var _trator_parede: StaticBody2D
-var _trator_atolado: Sprite2D
-var _fumaca: CPUParticles2D
-var _pilha_lenha: Sprite2D
-var _cocho: Sprite2D
-var _bebedouro: Sprite2D
-var _vovo: Sprite2D
 var _tempo := 0.0
+
+# Peças do cenário que mudam conforme o dia (nomes únicos na cena).
+@onready var _seta: Sprite2D = %Seta
+@onready var _poco: Sprite2D = %Poco
+@onready var _trator_parado: Sprite2D = %TratorParado
+@onready var _trator_parede: StaticBody2D = %ParedeTratorParado
+@onready var _trator_atolado: Sprite2D = %TratorAtolado
+@onready var _fumaca: CPUParticles2D = %Fumaca
+@onready var _pilha_lenha: Sprite2D = %PilhaLenha
+@onready var _cocho: Sprite2D = %Cocho
+@onready var _bebedouro: Sprite2D = %Bebedouro
+@onready var _vovo: AnimatedSprite2D = %Vovo
 
 
 func _ready() -> void:
 	Sons.musica("musica_fazenda")
-	_montar_chao()
-	mundo = Node2D.new()
-	add_child(mundo)
-	_montar_construcoes()
+	_aplicar_estado_do_dia()
 	horta = Horta.new()
 	horta.chao = chao
 	mundo.add_child(horta)
 	horta.atualizar_chao()
-	_montar_estado_do_dia()
-	_montar_zonas()
+	_soltar_galinhas()
 	_montar_jogadores()
-	_seta = Sprite2D.new()
-	_seta.texture = Jogo.tex("res://assets/sprites/extras/seta.png")
-	_seta.z_index = 20
-	_seta.visible = false
-	add_child(_seta)
 	hud = Hud.new()
 	add_child(hud)
 	_criar_tarefas()
 	_criar_estacao_dormir()
 	travar(true)
 	await hud.mostrar_dia(Jogo.dia, _subtitulo_do_dia())
-	await hud.conversa(FALAS_DO_DIA.get(Jogo.dia, []))
+	await hud.conversa(Textos.FALAS_DO_DIA.get(Jogo.dia, []))
 	travar(false)
 	ocupado = false
 
@@ -134,153 +81,40 @@ func _subtitulo_do_dia() -> String:
 	return " · ".join(nomes)
 
 
-# ================================================================== montagem do mapa
-func _montar_chao() -> void:
-	chao = TileMapLayer.new()
-	var conjunto := TileSet.new()
-	conjunto.tile_size = Vector2i(16, 16)
-	var fonte := TileSetAtlasSource.new()
-	fonte.texture = load("res://assets/sprites/tiles/atlas.png")
-	fonte.texture_region_size = Vector2i(16, 16)
-	for i in 8:
-		fonte.create_tile(Vector2i(i, 0))
-	conjunto.add_source(fonte, 0)
-	chao.tile_set = conjunto
-	add_child(chao)
+# ================================================================== o mapa no dia de hoje
+## Ajusta o cenário da cena ao que já foi feito (Jogo guarda as tarefas feitas).
+func _aplicar_estado_do_dia() -> void:
 	var arado := Jogo.feita("arar")
-	for y in MAPA.size():
-		var linha: String = MAPA[y]
-		for x in linha.length():
-			var bloco := 0
-			match linha[x]:
-				",":
-					bloco = 6
-				"#":
-					bloco = 1
-				"~":
-					bloco = 3
-				"l":
-					bloco = 4
-				"c":
-					bloco = 2 if arado else 7
-			chao.set_cell(Vector2i(x, y), 0, Vector2i(bloco, 0))
-
-
-func _sprite(caminho: String, pos: Vector2, z := 0) -> Sprite2D:
-	var s := Sprite2D.new()
-	s.texture = Jogo.tex(caminho)
-	s.centered = false
-	s.position = pos
-	s.z_index = z
-	mundo.add_child(s)
-	return s
-
-
-func _parede(r: Rect2, camada := 1) -> StaticBody2D:
-	var corpo := StaticBody2D.new()
-	corpo.collision_layer = camada
-	corpo.collision_mask = 0
-	var forma := CollisionShape2D.new()
-	var ret := RectangleShape2D.new()
-	ret.size = r.size
-	forma.shape = ret
-	forma.position = r.get_center()
-	corpo.add_child(forma)
-	mundo.add_child(corpo)
-	return corpo
-
-
-func _cerca_h(x0: int, x1: int, y: int, pular: Array = []) -> void:
-	for x in range(x0, x1 + 1):
-		if x in pular:
-			continue
-		_sprite("res://assets/sprites/estruturas/cerca_h.png", Vector2(x * 16, y * 16))
-		_parede(Rect2(x * 16, y * 16 + 4, 16, 10))
-
-
-func _cerca_v(x: int, y0: int, y1: int, pular: Array = []) -> void:
-	for y in range(y0, y1 + 1):
-		if y in pular:
-			continue
-		_sprite("res://assets/sprites/estruturas/cerca_v.png", Vector2(x * 16, y * 16))
-		_parede(Rect2(x * 16 + 4, y * 16, 10, 16))
-
-
-func _montar_construcoes() -> void:
-	# casa da Vovó
-	_sprite("res://assets/sprites/estruturas/casa.png", Lugares.CASA)
-	_sprite("res://assets/sprites/extras/chamine.png", Lugares.CHAMINE - Vector2(5, -2))
-	_parede(Rect2(Lugares.CASA + Vector2(2, 22), Vector2(60, 34)))
-	_pilha_lenha = _sprite("res://assets/sprites/extras/lenha.png", Lugares.PILHA_LENHA - Vector2(8, 16))
+	if arado:
+		for x in range(Lugares.CAMPO.position.x, Lugares.CAMPO.end.x):
+			for y in range(Lugares.CAMPO.position.y, Lugares.CAMPO.end.y):
+				chao.set_cell(Vector2i(x, y), 0, Vector2i(2, 0))
+	if Jogo.feita("poco"):
+		consertar_poco()
 	_pilha_lenha.visible = Jogo.feita("lenha")
-	_fumaca = CPUParticles2D.new()
-	_fumaca.position = Lugares.CHAMINE
-	_fumaca.z_index = 7
-	_fumaca.amount = 10
-	_fumaca.lifetime = 2.2
-	_fumaca.texture = Jogo.tex("res://assets/sprites/extras/bolinha.png")
-	_fumaca.direction = Vector2(0.3, -1)
-	_fumaca.spread = 12.0
-	_fumaca.gravity = Vector2(4, -6)
-	_fumaca.initial_velocity_min = 6.0
-	_fumaca.initial_velocity_max = 12.0
-	_fumaca.scale_amount_min = 0.4
-	_fumaca.scale_amount_max = 1.0
-	_fumaca.color = Color(1, 1, 1, 0.55)
 	_fumaca.emitting = Jogo.feita("lenha")
-	mundo.add_child(_fumaca)
-	# mata
-	for p in Lugares.ARVORES:
-		_sprite("res://assets/sprites/estruturas/arvore.png", p)
-		_parede(Rect2(p + Vector2(11, 20), Vector2(10, 10)))
-	# galpão e galinheiro
-	_sprite("res://assets/sprites/estruturas/galpao.png", Lugares.GALPAO)
-	_parede(Rect2(Lugares.GALPAO + Vector2(3, 18), Vector2(50, 28)))
-	_sprite("res://assets/sprites/estruturas/galinheiro.png", Lugares.GALINHEIRO)
-	_parede(Rect2(Lugares.GALINHEIRO + Vector2(3, 14), Vector2(34, 20)))
-	# poço
-	var poco := "res://assets/sprites/objetos/poco.png" if Jogo.feita("poco") else "res://assets/sprites/extras/poco_quebrado.png"
-	_poco = _sprite(poco, Lugares.POCO)
-	_parede(Rect2(Lugares.POCO + Vector2(1, 6), Vector2(14, 10)))
-	# cercado das galinhas (abertura embaixo)
-	_cerca_h(29, 37, 1, [31, 32, 33])
-	_cerca_v(29, 2, 5)
-	_cerca_v(37, 2, 5)
-	_cerca_h(29, 37, 6, [32, 33, 34])
-	# curral (entrada do lado esquerdo)
-	_cerca_h(31, 38, 9)
-	_cerca_h(31, 38, 13)
-	_cerca_v(31, 10, 12, [11])
-	_cerca_v(38, 10, 12)
-	_sprite("res://assets/sprites/personagens/vaca_mimosa.png", Lugares.VACA)
-	var cheio := Jogo.feita("animais")
-	_cocho = _sprite("res://assets/sprites/extras/cocho_%s.png" % ("cheio" if cheio else "vazio"), Lugares.COCHO)
-	_bebedouro = _sprite("res://assets/sprites/extras/bebedouro_%s.png" % ("cheio" if cheio else "vazio"), Lugares.BEBEDOURO)
-	# cerca de baixo, porteira e píer
-	_cerca_h(14, 18, 21)
-	_cerca_h(21, 26, 21)
-	_sprite("res://assets/sprites/estruturas/porteira.png", Lugares.PORTEIRA)
-	for y in range(14, 21):
-		_sprite("res://assets/sprites/estruturas/pier.png", Vector2(Lugares.PIER_X, y * 16), 1)
-	# água do lago e bordas da tela (não dá para passar)
-	_parede(Rect2(480, 272, 160, 96))
-	_parede(Rect2(512, 256, 128, 16))
-	_parede(Rect2(-16, 0, 16, 360))
-	_parede(Rect2(640, 0, 16, 360))
-	_parede(Rect2(0, -16, 640, 16))
-	_parede(Rect2(0, 352, 640, 16))
-	# Vovó
-	_vovo = _sprite("res://assets/sprites/personagens/vovo_zefa.png", Lugares.VOVO - Vector2(8, 24), 7)
-
-
-func _montar_estado_do_dia() -> void:
+	if Jogo.feita("animais"):
+		encher_cocho()
+		encher_bebedouro()
 	if Jogo.feita("trator"):
-		_criar_trator_parado()
-	else:
-		_trator_atolado = _sprite("res://assets/sprites/extras/trator.png", Lugares.TRATOR_ATOLADO)
-	if not Jogo.feita("arar"):
-		for b in Lugares.PEDRAS:
-			_criar_pedra(Vector2(b.x * 16 + 8, b.y * 16 + 10))
+		_trator_atolado.queue_free()
+		_trator_atolado = null
+	mostrar_trator_parado(Jogo.feita("trator"))
+	for p in %Pedras.get_children():
+		if arado:
+			p.queue_free()
+		else:
+			pedras.append(p)
+	var coloridas := Jogo.zonas_coloridas()
+	for cinza in %Zonas.get_children():
+		if String(cinza.name) in coloridas:
+			cinza.queue_free()
+		else:
+			_zonas[String(cinza.name)] = cinza
+	_vovo.play("parado_baixo")
+
+
+func _soltar_galinhas() -> void:
 	for p in Lugares.GALINHAS_SOLTAS:
 		var g := Galinha.new()
 		g.cercado = Lugares.CERCADO
@@ -289,50 +123,6 @@ func _montar_estado_do_dia() -> void:
 		galinhas.append(g)
 		if Jogo.feita("galinhas"):
 			g.colocar_no_cercado()
-
-
-func _criar_trator_parado() -> void:
-	_trator_parado = _sprite("res://assets/sprites/extras/trator.png", Lugares.TRATOR_PARADO - Vector2(16, 24))
-	_trator_parede = _parede(Rect2(Lugares.TRATOR_PARADO + Vector2(-13, -8), Vector2(26, 8)))
-
-
-func _criar_pedra(pos: Vector2) -> void:
-	var corpo := StaticBody2D.new()
-	corpo.collision_layer = 8
-	corpo.collision_mask = 0
-	corpo.position = pos
-	corpo.z_index = 3
-	corpo.add_to_group("pedras")
-	var forma := CollisionShape2D.new()
-	var ret := RectangleShape2D.new()
-	ret.size = Vector2(12, 8)
-	forma.shape = ret
-	forma.position = Vector2(0, -2)
-	corpo.add_child(forma)
-	var s := Sprite2D.new()
-	s.texture = Jogo.tex("res://assets/sprites/objetos/pedra.png")
-	s.position = Vector2(0, -6)
-	corpo.add_child(s)
-	mundo.add_child(corpo)
-	pedras.append(corpo)
-
-
-func _montar_zonas() -> void:
-	var coloridas := Jogo.zonas_coloridas()
-	for nome in Lugares.ZONAS:
-		if nome in coloridas:
-			continue
-		var r: Rect2 = Lugares.ZONAS[nome]
-		var cinza := ColorRect.new()
-		cinza.position = r.position
-		cinza.size = r.size
-		cinza.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		cinza.z_index = 5
-		var mat := ShaderMaterial.new()
-		mat.shader = SHADER_CINZA
-		cinza.material = mat
-		add_child(cinza)
-		_zonas[nome] = cinza
 
 
 func _montar_jogadores() -> void:
@@ -414,11 +204,11 @@ func _tarefa_terminou(t: Tarefa) -> void:
 	travar(false)
 	ocupado = false
 	if Jogo.dia_completo():
-		await hud.falar(ELOGIOS.get(t.id, "Muito bem!"))
-		hud.falar("Tudo pronto por hoje! Agora os dois na porta de casa, para dormir.")
+		await hud.falar(Textos.ELOGIOS.get(t.id, "Muito bem!"))
+		hud.falar(Textos.HORA_DE_DORMIR)
 		estacao_dormir.ativa = true
 	else:
-		hud.falar(ELOGIOS.get(t.id, "Muito bem!"))
+		hud.falar(Textos.ELOGIOS.get(t.id, "Muito bem!"))
 
 
 func _dormir(_a: Jogador, _b: Jogador) -> void:
@@ -476,7 +266,7 @@ func colorir(id: String) -> void:
 
 # ================================================================== mudanças no mapa
 func consertar_poco() -> void:
-	_poco.texture = Jogo.tex("res://assets/sprites/objetos/poco.png")
+	_poco.texture = POCO_CONSERTADO
 
 
 func acender_fogao() -> void:
@@ -488,12 +278,10 @@ func desatolar_trator() -> void:
 	if _trator_atolado != null:
 		_trator_atolado.queue_free()
 		_trator_atolado = null
-	_criar_trator_parado()
+	mostrar_trator_parado(true)
 
 
 func mostrar_trator_parado(sim: bool) -> void:
-	if _trator_parado == null:
-		return
 	_trator_parado.visible = sim
 	(_trator_parede.get_child(0) as CollisionShape2D).set_deferred("disabled", not sim)
 

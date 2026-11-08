@@ -17,30 +17,18 @@ var _comemorando := 0.0
 @onready var sprite: AnimatedSprite2D = $Sprite
 @onready var item_sprite: Sprite2D = $Item
 
+## Altura do sprite acima dos pés (o quadro do pacote tem 20 px de altura).
+const PES_Y := -10.0
+
 
 func _ready() -> void:
 	add_to_group("jogadores")
 	z_index = 10
-	sprite.sprite_frames = _montar_animacoes()
+	# As animações vêm do pacote Super Retro World (ver scripts/aparencia.gd).
+	sprite.sprite_frames = Aparencia.quadros_neto(numero)
 	sprite.play("parado_baixo")
-
-
-func _montar_animacoes() -> SpriteFrames:
-	var quadros := SpriteFrames.new()
-	var base := "res://assets/sprites/personagens/p%d_" % numero
-	for d in ["baixo", "cima", "lado"]:
-		var parado: Texture2D = load(base + d + "_parado.png")
-		quadros.add_animation("parado_" + d)
-		quadros.add_frame("parado_" + d, parado)
-		quadros.add_animation("anda_" + d)
-		quadros.set_animation_speed("anda_" + d, 9.0)
-		for k in [1, 2, 3, 4]:
-			quadros.add_frame("anda_" + d, load(base + d + "_anda%d.png" % k))
-	quadros.add_animation("comemora")
-	quadros.set_animation_speed("comemora", 7.0)
-	quadros.add_frame("comemora", load(base + "comemora1.png"))
-	quadros.add_frame("comemora", load(base + "comemora2.png"))
-	return quadros
+	# O anel sob os pés mostra de quem é o neto: laranja (1) ou azul (2).
+	$Anel.modulate = Jogo.COR[numero]
 
 
 func _physics_process(_delta: float) -> void:
@@ -104,8 +92,8 @@ func esconder(sim: bool) -> void:
 ## Pulinho de alegria.
 func pular() -> void:
 	var tw := create_tween()
-	tw.tween_property(sprite, "position:y", -18.0, 0.12)
-	tw.tween_property(sprite, "position:y", -12.0, 0.12)
+	tw.tween_property(sprite, "position:y", PES_Y - 6.0, 0.12)
+	tw.tween_property(sprite, "position:y", PES_Y, 0.12)
 
 
 ## Comemora com os braços para cima, dando pulinhos.
@@ -113,8 +101,8 @@ func comemorar() -> void:
 	_comemorando = 1.4
 	var tw := create_tween()
 	for i in 3:
-		tw.tween_property(sprite, "position:y", -18.0, 0.13)
-		tw.tween_property(sprite, "position:y", -12.0, 0.13)
+		tw.tween_property(sprite, "position:y", PES_Y - 6.0, 0.13)
+		tw.tween_property(sprite, "position:y", PES_Y, 0.13)
 
 
 func olhar_para_baixo() -> void:
