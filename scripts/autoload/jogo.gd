@@ -74,7 +74,6 @@ var cesta := {}
 var horta: Array[Dictionary] = []
 var fotos: Array[Dictionary] = []
 var ultimo_papel_a := 2   # quem fez o papel da esquerda por último (para sugerir a troca)
-var prefacio_volta_ao_menu := false   # o prefácio foi aberto pelo menu (só para assistir)?
 var _texturas := {}
 
 
