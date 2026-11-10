@@ -1,0 +1,220 @@
+[gd_scene load_steps=18 format=3]
+
+[ext_resource type="PackedScene" path="res://cenas/minijogos/minijogo_base.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scripts/minijogos/minijogo_ordenha.gd" id="2_cola"]
+[ext_resource type="Texture2D" path="res://assets/SuperRetroWorld_Farming/Tilesets/SuperRetroWorld_Farming_Tileset.png" id="3_tileset"]
+[ext_resource type="Texture2D" path="res://assets/recortes/minijogos/barril_tampado.tres" id="4_barril1"]
+[ext_resource type="Texture2D" path="res://assets/recortes/minijogos/barril_agua.tres" id="5_barril2"]
+[ext_resource type="Texture2D" path="res://assets/recortes/minijogos/cocho.tres" id="6_cocho"]
+[ext_resource type="Texture2D" path="res://assets/recortes/minijogos/balde_madeira.tres" id="7_balde"]
+[ext_resource type="Texture2D" path="res://assets/sprites/personagens/vaca_mimosa.png" id="8_vaca"]
+[ext_resource type="Texture2D" path="res://assets/sprites/personagens/p1_lado_parado.png" id="9_neto"]
+[ext_resource type="Texture2D" path="res://assets/sprites/extras/capim.png" id="10_capim"]
+[ext_resource type="Texture2D" path="res://assets/sprites/extras/coracao.png" id="11_coracao"]
+[ext_resource type="Texture2D" path="res://assets/sprites/extras/bolinha.png" id="12_bolinha"]
+[ext_resource type="Texture2D" path="res://assets/recortes/minijogos/abobora.tres" id="13_abobora"]
+[ext_resource type="Texture2D" path="res://assets/recortes/minijogos/janela.tres" id="14_janela"]
+
+[sub_resource type="StyleBoxFlat" id="calma_cheia"]
+bg_color = Color(0.95, 0.4, 0.45, 1)
+
+[sub_resource type="StyleBoxFlat" id="leite_cheio"]
+bg_color = Color(0.98, 0.98, 0.96, 1)
+
+[node name="MinijogoOrdenha" instance=ExtResource("1_base")]
+editor_description = "Minijogo da ordenha (dia 4). HERDA de minijogo_base.tscn e só acrescenta o estábulo dentro de Painel/Conteudo. O script minijogo_ordenha.gd liga a regra (regra_ordenha.gd) a estes nós."
+script = ExtResource("2_cola")
+
+[node name="Parede" type="NinePatchRect" parent="Painel/Conteudo"]
+editor_description = "Parede de tábuas do estábulo: um painel de madeira do tileset do pacote (48x48). As margens de cima e de baixo (o acabamento) ficam paradas e o meio repete (axis_stretch = Tile). Ampliada 3x."
+offset_right = 187.0
+offset_bottom = 52.0
+scale = Vector2(3, 3)
+mouse_filter = 2
+texture = ExtResource("3_tileset")
+region_rect = Rect2(1184, 112, 48, 48)
+patch_margin_top = 12
+patch_margin_bottom = 4
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="Janela1" type="Sprite2D" parent="Painel/Conteudo"]
+editor_description = "Janela do estábulo (recorte janela.tres do pacote, 3x)."
+position = Vector2(150, 118)
+scale = Vector2(3, 3)
+texture = ExtResource("14_janela")
+
+[node name="Janela2" type="Sprite2D" parent="Painel/Conteudo"]
+editor_description = "Outra janela (mesmo recorte)."
+position = Vector2(400, 118)
+scale = Vector2(3, 3)
+texture = ExtResource("14_janela")
+
+[node name="Piso" type="NinePatchRect" parent="Painel/Conteudo"]
+editor_description = "Chão de palha: um quadradinho cor de palha do tileset do pacote repetido (axis_stretch = Tile). Ampliado 3x."
+offset_top = 150.0
+offset_right = 187.0
+offset_bottom = 184.0
+scale = Vector2(3, 3)
+mouse_filter = 2
+texture = ExtResource("3_tileset")
+region_rect = Rect2(384, 400, 16, 16)
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="Barril1" type="Sprite2D" parent="Painel/Conteudo"]
+editor_description = "Barril tampado (recorte do pacote, 3x)."
+position = Vector2(36, 176)
+scale = Vector2(3, 3)
+texture = ExtResource("4_barril1")
+offset = Vector2(0, -10)
+
+[node name="Barril2" type="Sprite2D" parent="Painel/Conteudo"]
+editor_description = "Barril com água (recorte do pacote, 3x)."
+position = Vector2(84, 180)
+scale = Vector2(3, 3)
+texture = ExtResource("5_barril2")
+offset = Vector2(0, -10)
+
+[node name="Abobora" type="Sprite2D" parent="Painel/Conteudo"]
+editor_description = "Jerimum de enfeite (recorte do pacote, 2x)."
+position = Vector2(524, 196)
+scale = Vector2(2, 2)
+texture = ExtResource("13_abobora")
+offset = Vector2(0, -9)
+
+[node name="Vaca" type="Sprite2D" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "A Mimosa (sprite do projeto vaca_mimosa.png, 6x — o pacote não tem vaca). offset põe a origem nos pés. O script soma uma tremida na posição quando ela dá coice."
+position = Vector2(226, 226)
+scale = Vector2(6, 6)
+texture = ExtResource("8_vaca")
+centered = false
+offset = Vector2(-12, -12)
+
+[node name="Cocho" type="Sprite2D" parent="Painel/Conteudo"]
+editor_description = "Cocho de madeira (recorte cocho.tres do pacote, 2x), na frente da cabeça da Mimosa."
+position = Vector2(338, 236)
+scale = Vector2(2, 2)
+texture = ExtResource("6_cocho")
+centered = false
+offset = Vector2(-16, -34)
+
+[node name="Capim" type="Sprite2D" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "Capim que o papel A oferece. Só aparece (visible) enquanto ele segura a ação; o script faz balançar."
+visible = false
+position = Vector2(318, 170)
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("10_capim")
+
+[node name="NetoA" type="Sprite2D" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "Neto do papel A (dá o capim), do lado da cabeça, virado para a vaca (flip_h). Imagem escolhida pelo script com Aparencia.neto()."
+position = Vector2(420, 240)
+scale = Vector2(3, 3)
+texture = ExtResource("9_neto")
+centered = false
+offset = Vector2(-8, -24)
+
+[node name="Balde" type="Sprite2D" parent="Painel/Conteudo"]
+editor_description = "Balde de madeira (recorte balde_madeira.tres do pacote, 4x), embaixo da vaca."
+position = Vector2(252, 248)
+scale = Vector2(4, 4)
+texture = ExtResource("7_balde")
+centered = false
+offset = Vector2(-5.5, -13)
+
+[node name="LeiteNoBalde" type="ColorRect" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "O leite subindo no balde. O script muda a altura (size.y) conforme a regra e mantém a base no fundo do balde."
+offset_left = 238.0
+offset_top = 212.0
+offset_right = 266.0
+offset_bottom = 242.0
+mouse_filter = 2
+color = Color(0.98, 0.97, 0.92, 0.95)
+
+[node name="Gotas" type="CPUParticles2D" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "Gotinhas de leite caindo no balde. one_shot: o script chama restart() a cada aperto certo."
+position = Vector2(250, 222)
+emitting = false
+amount = 4
+lifetime = 0.35
+one_shot = true
+explosiveness = 0.8
+texture = ExtResource("12_bolinha")
+direction = Vector2(0, 1)
+spread = 12.0
+gravity = Vector2(0, 300)
+initial_velocity_min = 20.0
+initial_velocity_max = 50.0
+scale_amount_min = 0.5
+scale_amount_max = 0.7
+
+[node name="NetoB" type="Sprite2D" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "Neto do papel B (tira o leite), sentado do lado do balde. Imagem escolhida pelo script com Aparencia.neto()."
+position = Vector2(196, 250)
+scale = Vector2(3, 3)
+texture = ExtResource("9_neto")
+centered = false
+offset = Vector2(-8, -24)
+
+[node name="NomeLeite" type="Label" parent="Painel/Conteudo"]
+editor_description = "Nome da barra de leite."
+offset_left = 40.0
+offset_top = 74.0
+offset_right = 200.0
+offset_bottom = 88.0
+theme_type_variation = &"Rotulo"
+theme_override_font_sizes/font_size = 11
+text = "LEITE"
+horizontal_alignment = 1
+
+[node name="Leite" type="ProgressBar" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "Quanto leite já tem no balde (0 a 1)."
+offset_left = 40.0
+offset_top = 60.0
+offset_right = 200.0
+offset_bottom = 72.0
+mouse_filter = 2
+theme_type_variation = &"BarraJogo"
+theme_override_styles/fill = SubResource("leite_cheio")
+max_value = 1.0
+step = 0.0
+show_percentage = false
+
+[node name="Coracao" type="Sprite2D" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "Coração da calma: fica mais forte (modulate.a) quanto mais calma a Mimosa está."
+position = Vector2(436, 66)
+scale = Vector2(2, 2)
+texture = ExtResource("11_coracao")
+
+[node name="NomeCalma" type="Label" parent="Painel/Conteudo"]
+editor_description = "Nome da barra de calma."
+offset_left = 456.0
+offset_top = 74.0
+offset_right = 540.0
+offset_bottom = 88.0
+theme_type_variation = &"Rotulo"
+theme_override_font_sizes/font_size = 11
+text = "CALMA"
+horizontal_alignment = 1
+
+[node name="Calma" type="ProgressBar" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "Calma da Mimosa (0 a 1). Acima de 0,6 ela deixa tirar o leite."
+offset_left = 456.0
+offset_top = 60.0
+offset_right = 540.0
+offset_bottom = 72.0
+mouse_filter = 2
+theme_type_variation = &"BarraJogo"
+theme_override_styles/fill = SubResource("calma_cheia")
+max_value = 1.0
+step = 0.0
+show_percentage = false

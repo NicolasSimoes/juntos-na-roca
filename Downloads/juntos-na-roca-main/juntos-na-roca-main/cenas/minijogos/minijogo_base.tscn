@@ -1,0 +1,98 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/minijogos/minijogo.gd" id="1_script"]
+[ext_resource type="Theme" path="res://assets/tema/tema_jogo.tres" id="2_tema"]
+
+[node name="MinijogoBase" type="CanvasLayer"]
+editor_description = "Raiz de todo minijogo. É uma CanvasLayer: uma camada desenhada por cima do mapa da fazenda (layer 4), que não se mexe com a câmera. O script minijogo.gd cuida do que é comum a todos os minijogos: título, texto de cada papel, mensagens, erros e o fim. Cada minijogo herda esta cena e coloca os seus nós dentro de Painel/Conteudo."
+layer = 4
+script = ExtResource("1_script")
+
+[node name="Fundo" type="ColorRect" parent="."]
+unique_name_in_owner = true
+editor_description = "Escurece o mapa atrás do minijogo para o painel chamar a atenção. Ocupa a tela toda (âncoras Full Rect) e ignora o mouse."
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.05, 0.04, 0.08, 0.6)
+
+[node name="Painel" type="Panel" parent="."]
+unique_name_in_owner = true
+editor_description = "O quadro azul do minijogo (560 x 290). O visual vem do tema tema_jogo.tres (variação PainelMinijogo), e o tema vale para todos os filhos. clip_contents corta o que passar da borda."
+clip_contents = true
+offset_left = 40.0
+offset_top = 4.0
+offset_right = 600.0
+offset_bottom = 294.0
+theme = ExtResource("2_tema")
+theme_type_variation = &"PainelMinijogo"
+
+[node name="Conteudo" type="Control" parent="Painel"]
+unique_name_in_owner = true
+editor_description = "Onde cada minijogo coloca o seu cenário (sprites, barras, partículas). Fica antes dos textos na árvore, então é desenhado por baixo deles."
+layout_mode = 3
+anchors_preset = 0
+offset_right = 560.0
+offset_bottom = 290.0
+mouse_filter = 2
+
+[node name="Titulo" type="Label" parent="Painel"]
+unique_name_in_owner = true
+editor_description = "Nome do minijogo. O texto vem da variável titulo, preenchida em montar() pelo script de cada minijogo."
+layout_mode = 0
+offset_top = 4.0
+offset_right = 560.0
+offset_bottom = 24.0
+theme_type_variation = &"Rotulo"
+theme_override_colors/font_color = Color(1, 0.9, 0.5, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
+
+[node name="Faixa" type="ColorRect" parent="Painel"]
+unique_name_in_owner = true
+editor_description = "Faixa escura no pé do painel, atrás dos textos de cada papel, para eles ficarem legíveis."
+layout_mode = 0
+offset_top = 250.0
+offset_right = 560.0
+offset_bottom = 290.0
+mouse_filter = 2
+color = Color(0.1, 0.07, 0.05, 0.75)
+
+[node name="RotuloA" type="Label" parent="Painel"]
+unique_name_in_owner = true
+editor_description = "O que o jogador do papel A faz (\"Jogador 1: ...\"). A cor é a do jogador que pegou esse papel, definida pelo script."
+layout_mode = 0
+offset_top = 252.0
+offset_right = 560.0
+offset_bottom = 268.0
+theme_type_variation = &"Rotulo"
+theme_override_font_sizes/font_size = 10
+horizontal_alignment = 1
+
+[node name="RotuloB" type="Label" parent="Painel"]
+unique_name_in_owner = true
+editor_description = "O que o jogador do papel B faz. Mesma ideia do RotuloA, na cor do outro jogador."
+layout_mode = 0
+offset_top = 270.0
+offset_right = 560.0
+offset_bottom = 286.0
+theme_type_variation = &"Rotulo"
+theme_override_font_sizes/font_size = 10
+horizontal_alignment = 1
+
+[node name="Mensagem" type="Label" parent="Painel"]
+unique_name_in_owner = true
+editor_description = "Recado rápido (\"Conseguiram!\", \"Errou!\"). Começa invisível (alfa 0); a função mensagem() mostra o texto e um Tween o apaga devagar."
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_top = 26.0
+offset_right = 560.0
+offset_bottom = 46.0
+theme_type_variation = &"Rotulo"
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 13
+horizontal_alignment = 1

@@ -1,0 +1,377 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="PackedScene" path="res://cenas/minijogos/minijogo_base.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scripts/minijogos/minijogo_poco.gd" id="2_cola"]
+[ext_resource type="Texture2D" path="res://assets/SuperRetroWorld_Farming/Tilesets/SuperRetroWorld_Farming_Tileset.png" id="3_tileset"]
+[ext_resource type="Texture2D" path="res://assets/sprites/objetos/tabua_quadrado.png" id="4_tabua"]
+[ext_resource type="Texture2D" path="res://assets/sprites/objetos/prego.png" id="5_prego"]
+[ext_resource type="Texture2D" path="res://assets/sprites/objetos/martelo.png" id="6_martelo"]
+[ext_resource type="Texture2D" path="res://assets/recortes/minijogos/poco_poco_0.tres" id="7_poco"]
+
+[node name="MinijogoPoco" instance=ExtResource("1_base")]
+editor_description = "Minijogo do poço (dia 1). Herda minijogo_base.tscn e põe o cenário em Painel/Conteudo. O script minijogo_poco.gd liga a regra (regra_poco.gd) a estes nós."
+script = ExtResource("2_cola")
+
+[node name="Grama" type="NinePatchRect" parent="Painel/Conteudo"]
+editor_description = "Chão: o tile de grama do pacote repetido pela tela toda."
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 280.0
+offset_bottom = 145.0
+scale = Vector2(2, 2)
+mouse_filter = 2
+texture = ExtResource("3_tileset")
+region_rect = Rect2(480, 320, 16, 16)
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="BordaDePedra" type="NinePatchRect" parent="Painel/Conteudo"]
+editor_description = "A boca de pedra do poço, em volta da tampa (textura de pedras do pacote)."
+offset_left = 28.0
+offset_top = 44.0
+offset_right = 356.0
+offset_bottom = 154.0
+scale = Vector2(1, 1)
+mouse_filter = 2
+texture = ExtResource("3_tileset")
+region_rect = Rect2(48, 528, 32, 32)
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="Tampa" type="NinePatchRect" parent="Painel/Conteudo"]
+editor_description = "A tampa de madeira com os 4 espaços (tábuas do pacote repetidas)."
+offset_left = 36.0
+offset_top = 52.0
+offset_right = 348.0
+offset_bottom = 146.0
+scale = Vector2(1, 1)
+mouse_filter = 2
+texture = ExtResource("3_tileset")
+region_rect = Rect2(80, 592, 16, 16)
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[node name="Vagas" type="Node2D" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "Os 4 espaços da tampa. Cada um tem a forma (Tabua) e 2 pregos. Vazio = forma escura (modulate quase preto); encaixado = madeira."
+
+[node name="Vaga0" type="Node2D" parent="Painel/Conteudo/Vagas"]
+position = Vector2(80, 98)
+
+[node name="Tabua" type="Sprite2D" parent="Painel/Conteudo/Vagas/Vaga0"]
+modulate = Color(0.12, 0.1, 0.1, 1)
+scale = Vector2(3, 3)
+texture = ExtResource("4_tabua")
+
+[node name="Prego1" type="Sprite2D" parent="Painel/Conteudo/Vagas/Vaga0"]
+visible = false
+position = Vector2(-12, -12)
+texture = ExtResource("5_prego")
+
+[node name="Prego2" type="Sprite2D" parent="Painel/Conteudo/Vagas/Vaga0"]
+visible = false
+position = Vector2(12, 10)
+texture = ExtResource("5_prego")
+
+[node name="Vaga1" type="Node2D" parent="Painel/Conteudo/Vagas"]
+position = Vector2(158, 98)
+
+[node name="Tabua" type="Sprite2D" parent="Painel/Conteudo/Vagas/Vaga1"]
+modulate = Color(0.12, 0.1, 0.1, 1)
+scale = Vector2(3, 3)
+texture = ExtResource("4_tabua")
+
+[node name="Prego1" type="Sprite2D" parent="Painel/Conteudo/Vagas/Vaga1"]
+visible = false
+position = Vector2(-12, -12)
+texture = ExtResource("5_prego")
+
+[node name="Prego2" type="Sprite2D" parent="Painel/Conteudo/Vagas/Vaga1"]
+visible = false
+position = Vector2(12, 10)
+texture = ExtResource("5_prego")
+
+[node name="Vaga2" type="Node2D" parent="Painel/Conteudo/Vagas"]
+position = Vector2(236, 98)
+
+[node name="Tabua" type="Sprite2D" parent="Painel/Conteudo/Vagas/Vaga2"]
+modulate = Color(0.12, 0.1, 0.1, 1)
+scale = Vector2(3, 3)
+texture = ExtResource("4_tabua")
+
+[node name="Prego1" type="Sprite2D" parent="Painel/Conteudo/Vagas/Vaga2"]
+visible = false
+position = Vector2(-12, -12)
+texture = ExtResource("5_prego")
+
+[node name="Prego2" type="Sprite2D" parent="Painel/Conteudo/Vagas/Vaga2"]
+visible = false
+position = Vector2(12, 10)
+texture = ExtResource("5_prego")
+
+[node name="Vaga3" type="Node2D" parent="Painel/Conteudo/Vagas"]
+position = Vector2(314, 98)
+
+[node name="Tabua" type="Sprite2D" parent="Painel/Conteudo/Vagas/Vaga3"]
+modulate = Color(0.12, 0.1, 0.1, 1)
+scale = Vector2(3, 3)
+texture = ExtResource("4_tabua")
+
+[node name="Prego1" type="Sprite2D" parent="Painel/Conteudo/Vagas/Vaga3"]
+visible = false
+position = Vector2(-12, -12)
+texture = ExtResource("5_prego")
+
+[node name="Prego2" type="Sprite2D" parent="Painel/Conteudo/Vagas/Vaga3"]
+visible = false
+position = Vector2(12, 10)
+texture = ExtResource("5_prego")
+
+[node name="CursorVaga" type="ReferenceRect" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "Moldura de onde o papel A vai encaixar (só aparece com tábua na mão). ReferenceRect desenha só a borda; editor_only = false para aparecer no jogo."
+visible = false
+offset_left = 50.0
+offset_top = 68.0
+offset_right = 110.0
+offset_bottom = 128.0
+mouse_filter = 2
+border_color = Color(0.921569, 0.537255, 0.192157, 1)
+border_width = 2.5
+editor_only = false
+
+[node name="TabuaNaMao" type="Sprite2D" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "A tábua que o papel A está segurando, flutuando em cima do espaço escolhido."
+visible = false
+modulate = Color(1.15, 1.15, 1.15, 1)
+position = Vector2(80, 96)
+scale = Vector2(2.6, 2.6)
+texture = ExtResource("4_tabua")
+
+[node name="RotuloPilha" type="Label" parent="Painel/Conteudo"]
+editor_description = "Legenda da pilha."
+offset_left = 92.0
+offset_top = 154.0
+offset_right = 292.0
+offset_bottom = 168.0
+theme_type_variation = &"Rotulo"
+theme_override_font_sizes/font_size = 8
+text = "pilha de tábuas"
+horizontal_alignment = 1
+
+[node name="Pilha" type="Node2D" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "Os 4 lugares da pilha de tábuas. Lugar vazio = tábua já usada."
+
+[node name="Lugar0" type="Node2D" parent="Painel/Conteudo/Pilha"]
+position = Vector2(80, 196)
+
+[node name="Fundo" type="NinePatchRect" parent="Painel/Conteudo/Pilha/Lugar0"]
+offset_left = -30.0
+offset_top = -26.0
+offset_right = 30.0
+offset_bottom = 26.0
+scale = Vector2(1, 1)
+mouse_filter = 2
+texture = ExtResource("3_tileset")
+region_rect = Rect2(80, 592, 16, 16)
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+modulate = Color(0.6, 0.55, 0.5, 1)
+
+[node name="Tabua" type="Sprite2D" parent="Painel/Conteudo/Pilha/Lugar0"]
+scale = Vector2(2.6, 2.6)
+texture = ExtResource("4_tabua")
+
+[node name="Lugar1" type="Node2D" parent="Painel/Conteudo/Pilha"]
+position = Vector2(158, 196)
+
+[node name="Fundo" type="NinePatchRect" parent="Painel/Conteudo/Pilha/Lugar1"]
+offset_left = -30.0
+offset_top = -26.0
+offset_right = 30.0
+offset_bottom = 26.0
+scale = Vector2(1, 1)
+mouse_filter = 2
+texture = ExtResource("3_tileset")
+region_rect = Rect2(80, 592, 16, 16)
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+modulate = Color(0.6, 0.55, 0.5, 1)
+
+[node name="Tabua" type="Sprite2D" parent="Painel/Conteudo/Pilha/Lugar1"]
+scale = Vector2(2.6, 2.6)
+texture = ExtResource("4_tabua")
+
+[node name="Lugar2" type="Node2D" parent="Painel/Conteudo/Pilha"]
+position = Vector2(236, 196)
+
+[node name="Fundo" type="NinePatchRect" parent="Painel/Conteudo/Pilha/Lugar2"]
+offset_left = -30.0
+offset_top = -26.0
+offset_right = 30.0
+offset_bottom = 26.0
+scale = Vector2(1, 1)
+mouse_filter = 2
+texture = ExtResource("3_tileset")
+region_rect = Rect2(80, 592, 16, 16)
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+modulate = Color(0.6, 0.55, 0.5, 1)
+
+[node name="Tabua" type="Sprite2D" parent="Painel/Conteudo/Pilha/Lugar2"]
+scale = Vector2(2.6, 2.6)
+texture = ExtResource("4_tabua")
+
+[node name="Lugar3" type="Node2D" parent="Painel/Conteudo/Pilha"]
+position = Vector2(314, 196)
+
+[node name="Fundo" type="NinePatchRect" parent="Painel/Conteudo/Pilha/Lugar3"]
+offset_left = -30.0
+offset_top = -26.0
+offset_right = 30.0
+offset_bottom = 26.0
+scale = Vector2(1, 1)
+mouse_filter = 2
+texture = ExtResource("3_tileset")
+region_rect = Rect2(80, 592, 16, 16)
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+modulate = Color(0.6, 0.55, 0.5, 1)
+
+[node name="Tabua" type="Sprite2D" parent="Painel/Conteudo/Pilha/Lugar3"]
+scale = Vector2(2.6, 2.6)
+texture = ExtResource("4_tabua")
+
+[node name="CursorPilha" type="ReferenceRect" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "Moldura da tábua que o papel A está olhando na pilha. Fica escura enquanto o martelo trabalha."
+visible = false
+offset_left = 49.0
+offset_top = 169.0
+offset_right = 111.0
+offset_bottom = 223.0
+mouse_filter = 2
+border_color = Color(0.921569, 0.537255, 0.192157, 1)
+border_width = 2.5
+editor_only = false
+
+[node name="Espere" type="Label" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "Aparece quando a tábua foi encaixada e falta pregar."
+offset_left = 92.0
+offset_top = 226.0
+offset_right = 292.0
+offset_bottom = 240.0
+theme_type_variation = &"Rotulo"
+theme_override_font_sizes/font_size = 8
+text = "espere o martelo..."
+horizontal_alignment = 1
+visible = false
+
+[node name="AreaMartelo" type="ColorRect" parent="Painel/Conteudo"]
+editor_description = "Fundo claro da área do martelo (papel B)."
+offset_left = 378.0
+offset_top = 52.0
+offset_right = 542.0
+offset_bottom = 242.0
+mouse_filter = 2
+color = Color(1, 1, 1, 0.22)
+
+[node name="Poco" type="Sprite2D" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "O poço de pedra do pacote. A água sobe a cada tábua pregada: o script troca entre poco_poco_0..3.tres."
+position = Vector2(420, 102)
+scale = Vector2(2, 2)
+texture = ExtResource("7_poco")
+
+[node name="RotuloMartelo" type="Label" parent="Painel/Conteudo"]
+editor_description = "Legenda da área do martelo."
+offset_left = 452.0
+offset_top = 58.0
+offset_right = 542.0
+offset_bottom = 72.0
+theme_type_variation = &"Rotulo"
+theme_override_font_sizes/font_size = 9
+text = "martelo"
+horizontal_alignment = 1
+
+[node name="Martelo" type="Sprite2D" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "O martelo: fica levantado (rotation -0,9) e desce (0,4) por um instante a cada batida."
+position = Vector2(500, 116)
+rotation = -0.9
+scale = Vector2(3, 3)
+texture = ExtResource("6_martelo")
+
+[node name="Batida" type="Control" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "A barra de tempo do martelo. O script treme este nó (position.x) quando o martelo erra."
+layout_mode = 3
+anchors_preset = 0
+offset_left = 390.0
+offset_top = 160.0
+offset_right = 530.0
+offset_bottom = 176.0
+mouse_filter = 2
+
+[node name="Borda" type="ColorRect" parent="Painel/Conteudo/Batida"]
+offset_left = -2.0
+offset_top = -2.0
+offset_right = 142.0
+offset_bottom = 18.0
+mouse_filter = 2
+color = Color(0.15, 0.1, 0.06, 1)
+
+[node name="Fundo" type="ColorRect" parent="Painel/Conteudo/Batida"]
+offset_right = 140.0
+offset_bottom = 16.0
+mouse_filter = 2
+color = Color(0.85, 0.75, 0.6, 1)
+
+[node name="Zona" type="ColorRect" parent="Painel/Conteudo/Batida"]
+unique_name_in_owner = true
+editor_description = "A faixa do prego (o meio da barra, largura 2 x ZONA). Verde quando há tábua para pregar."
+offset_left = 54.6
+offset_right = 85.4
+offset_bottom = 16.0
+mouse_filter = 2
+color = Color(0.6, 0.6, 0.6, 1)
+
+[node name="PregoAlvo" type="Sprite2D" parent="Painel/Conteudo/Batida"]
+editor_description = "O prego em cima da faixa: é ali que tem que bater."
+position = Vector2(70, -10)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("5_prego")
+
+[node name="Marcador" type="ColorRect" parent="Painel/Conteudo/Batida"]
+unique_name_in_owner = true
+editor_description = "O marcador que vai e volta. O script põe na posição da regra (0 a 1) e pinta com a cor do jogador do papel B."
+offset_left = -2.0
+offset_top = -4.0
+offset_right = 2.0
+offset_bottom = 20.0
+mouse_filter = 2
+color = Color(0.356863, 0.552941, 0.933333, 1)
+
+[node name="BordaMarcador" type="ReferenceRect" parent="Painel/Conteudo/Batida/Marcador"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+border_color = Color(0, 0, 0, 1)
+editor_only = false
+
+[node name="Agora" type="Label" parent="Painel/Conteudo"]
+unique_name_in_owner = true
+editor_description = "'AGORA!' quando o marcador está no prego, ou 'espere a tábua...'."
+offset_left = 378.0
+offset_top = 200.0
+offset_right = 542.0
+offset_bottom = 214.0
+theme_type_variation = &"Rotulo"
+theme_override_font_sizes/font_size = 10
+text = ""
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.75, 1, 0.55, 1)

@@ -1,0 +1,78 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/telas/teclas_jogador.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://cenas/objetos/tecla.tscn" id="2_tecla"]
+[ext_resource type="Theme" path="res://assets/tema/tema_telas.tres" id="3_tema"]
+
+[node name="TeclasJogador" type="Control"]
+custom_minimum_size = Vector2(124, 58)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 124.0
+offset_bottom = 58.0
+mouse_filter = 2
+theme = ExtResource("3_tema")
+script = ExtResource("1_script")
+editor_description = "Teclas de um jogador (cruz de andar + AÇÃO). Troque 'numero' no Inspetor para ver as do jogador 2."
+
+[node name="Cima" parent="." instance=ExtResource("2_tecla")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 20.0
+offset_right = 38.0
+offset_bottom = 20.0
+
+[node name="Esquerda" parent="." instance=ExtResource("2_tecla")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_top = 22.0
+offset_right = 18.0
+offset_bottom = 42.0
+texto = "A"
+
+[node name="Baixo" parent="." instance=ExtResource("2_tecla")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 20.0
+offset_top = 22.0
+offset_right = 38.0
+offset_bottom = 42.0
+texto = "S"
+
+[node name="Direita" parent="." instance=ExtResource("2_tecla")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 40.0
+offset_top = 22.0
+offset_right = 58.0
+offset_bottom = 42.0
+texto = "D"
+
+[node name="RotuloAndar" type="Label" parent="."]
+layout_mode = 0
+offset_top = 44.0
+offset_right = 58.0
+offset_bottom = 58.0
+theme_override_font_sizes/font_size = 9
+text = "andar"
+horizontal_alignment = 1
+
+[node name="Acao" parent="." instance=ExtResource("2_tecla")]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(52, 20)
+layout_mode = 0
+offset_left = 68.0
+offset_top = 22.0
+offset_right = 120.0
+offset_bottom = 42.0
+texto = "Espaço"
+
+[node name="RotuloAcao" type="Label" parent="."]
+layout_mode = 0
+offset_left = 68.0
+offset_top = 44.0
+offset_right = 120.0
+offset_bottom = 58.0
+theme_override_font_sizes/font_size = 9
+text = "ação"
+horizontal_alignment = 1
