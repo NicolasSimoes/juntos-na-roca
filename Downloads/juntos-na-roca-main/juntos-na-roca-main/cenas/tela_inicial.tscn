@@ -1,0 +1,198 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/telas/tela_inicial.gd" id="1_tela"]
+[ext_resource type="Theme" path="res://assets/tema/tema_telas.tres" id="2_tema"]
+[ext_resource type="Texture2D" path="res://assets/sprites/extras/fundo_titulo.png" id="3_fundo"]
+[ext_resource type="Shader" path="res://assets/shaders/logo_ouro.gdshader" id="4_ouro"]
+[ext_resource type="PackedScene" path="res://cenas/objetos/teclas_jogador.tscn" id="5_teclas"]
+[ext_resource type="PackedScene" path="res://cenas/objetos/tecla.tscn" id="6_tecla"]
+[ext_resource type="Texture2D" path="res://assets/sprites/personagens/p1_baixo_parado.png" id="7_p1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/personagens/p2_baixo_parado.png" id="8_p2"]
+
+[sub_resource type="ShaderMaterial" id="ouro"]
+shader = ExtResource("4_ouro")
+shader_parameter/altura = 46.0
+
+[sub_resource type="StyleBoxFlat" id="cartao_1"]
+content_margin_left = 10.0
+content_margin_top = 8.0
+content_margin_right = 10.0
+content_margin_bottom = 8.0
+bg_color = Color(0.42, 0.24, 0.08, 0.92)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.92, 0.54, 0.19, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="cartao_2"]
+content_margin_left = 10.0
+content_margin_top = 8.0
+content_margin_right = 10.0
+content_margin_bottom = 8.0
+bg_color = Color(0.14, 0.22, 0.42, 0.92)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.36, 0.55, 0.93, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="TelaInicial" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_tema")
+script = ExtResource("1_tela")
+editor_description = "Tela inicial: os dois apertam AÇÃO para começar. Cada cartão mostra o neto e as teclas dele."
+
+[node name="Fundo" type="TextureRect" parent="."]
+modulate = Color(0.55, 0.55, 0.6, 1)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("3_fundo")
+expand_mode = 1
+
+[node name="Titulo" type="Label" parent="."]
+material = SubResource("ouro")
+layout_mode = 0
+offset_top = 16.0
+offset_right = 640.0
+offset_bottom = 72.0
+theme_type_variation = &"Titulo"
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 38
+text = "Juntos na Roça"
+horizontal_alignment = 1
+
+[node name="Sub" type="Label" parent="."]
+layout_mode = 0
+offset_top = 74.0
+offset_right = 640.0
+offset_bottom = 94.0
+theme_override_font_sizes/font_size = 14
+text = "Os dois apertam para começar!"
+horizontal_alignment = 1
+
+[node name="Cartao1" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = 80.0
+offset_top = 102.0
+offset_right = 310.0
+offset_bottom = 318.0
+theme_override_styles/panel = SubResource("cartao_1")
+
+[node name="Coluna" type="VBoxContainer" parent="Cartao1"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 6
+
+[node name="Nome" type="Label" parent="Cartao1/Coluna"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.7, 0.4, 1)
+theme_override_font_sizes/font_size = 17
+text = "Jogador 1"
+horizontal_alignment = 1
+
+[node name="Neto1" type="TextureRect" parent="Cartao1/Coluna"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 76)
+layout_mode = 2
+texture = ExtResource("7_p1")
+expand_mode = 1
+stretch_mode = 5
+metadata/personagem = "neto1"
+metadata/pose = "frente"
+
+[node name="Teclas1" parent="Cartao1/Coluna" instance=ExtResource("5_teclas")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Status1" type="Label" parent="Cartao1/Coluna"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.95, 0.6, 1)
+theme_override_font_sizes/font_size = 15
+text = "Aperte Espaço!"
+horizontal_alignment = 1
+
+[node name="Cartao2" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = 330.0
+offset_top = 102.0
+offset_right = 560.0
+offset_bottom = 318.0
+theme_override_styles/panel = SubResource("cartao_2")
+
+[node name="Coluna" type="VBoxContainer" parent="Cartao2"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 6
+
+[node name="Nome" type="Label" parent="Cartao2/Coluna"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.76, 1, 1)
+theme_override_font_sizes/font_size = 17
+text = "Jogador 2"
+horizontal_alignment = 1
+
+[node name="Neto2" type="TextureRect" parent="Cartao2/Coluna"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 76)
+layout_mode = 2
+texture = ExtResource("8_p2")
+expand_mode = 1
+stretch_mode = 5
+metadata/personagem = "neto2"
+metadata/pose = "frente"
+
+[node name="Teclas2" parent="Cartao2/Coluna" instance=ExtResource("5_teclas")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+numero = 2
+
+[node name="Status2" type="Label" parent="Cartao2/Coluna"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.95, 0.6, 1)
+theme_override_font_sizes/font_size = 15
+text = "Aperte Enter!"
+horizontal_alignment = 1
+
+[node name="Rodape" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_top = 326.0
+offset_right = 640.0
+offset_bottom = 350.0
+alignment = 1
+theme_override_constants/separation = 5
+
+[node name="Esc" parent="Rodape" instance=ExtResource("6_tecla")]
+custom_minimum_size = Vector2(28, 20)
+layout_mode = 2
+size_flags_vertical = 4
+texto = "Esc"
+
+[node name="Menu" type="Label" parent="Rodape"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "menu     ·     com controle também funciona!"

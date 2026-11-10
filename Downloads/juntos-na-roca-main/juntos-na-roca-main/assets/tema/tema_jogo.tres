@@ -1,0 +1,38 @@
+[gd_resource type="Theme" load_steps=4 format=3]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_painel_minijogo"]
+bg_color = Color(0.55, 0.78, 0.95, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.2, 0.15, 0.1, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_barra_fundo"]
+bg_color = Color(0.3, 0.25, 0.2, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.15, 0.1, 0.06, 1)
+expand_margin_left = 2.0
+expand_margin_top = 2.0
+expand_margin_right = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_barra_cheia"]
+bg_color = Color(0.921569, 0.537255, 0.192157, 1)
+
+[resource]
+BarraJogo/base_type = &"ProgressBar"
+BarraJogo/styles/background = SubResource("StyleBoxFlat_barra_fundo")
+BarraJogo/styles/fill = SubResource("StyleBoxFlat_barra_cheia")
+PainelMinijogo/base_type = &"Panel"
+PainelMinijogo/styles/panel = SubResource("StyleBoxFlat_painel_minijogo")
+Rotulo/base_type = &"Label"
+Rotulo/colors/font_outline_color = Color(0.1, 0.07, 0.05, 1)
+Rotulo/constants/outline_size = 3

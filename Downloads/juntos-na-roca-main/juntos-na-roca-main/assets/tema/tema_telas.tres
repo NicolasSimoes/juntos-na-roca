@@ -1,0 +1,119 @@
+[gd_resource type="Theme" load_steps=10 format=3]
+
+[ext_resource type="FontFile" path="res://assets/fontes/PixelifySans.ttf" id="1_pixel"]
+[ext_resource type="FontFile" path="res://assets/fontes/CinzelDecorative-Black.ttf" id="2_cinzel"]
+
+[sub_resource type="FontVariation" id="pixel_negrito"]
+base_font = ExtResource("1_pixel")
+variation_opentype = {2003265652: 500}
+
+[sub_resource type="StyleBoxFlat" id="cartao"]
+content_margin_left = 8.0
+content_margin_top = 6.0
+content_margin_right = 8.0
+content_margin_bottom = 6.0
+bg_color = Color(0.98, 0.93, 0.78, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.55, 0.36, 0.16, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+shadow_color = Color(0, 0, 0, 0.3)
+shadow_size = 3
+
+[sub_resource type="StyleBoxFlat" id="balao"]
+content_margin_left = 6.0
+content_margin_top = 3.0
+content_margin_right = 6.0
+content_margin_bottom = 3.0
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.12, 0.08, 0.06, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="legenda"]
+content_margin_left = 5.0
+content_margin_top = 2.0
+content_margin_right = 5.0
+content_margin_bottom = 2.0
+bg_color = Color(1, 0.91, 0.5, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.12, 0.08, 0.06, 1)
+
+[sub_resource type="StyleBoxFlat" id="quadro_hq"]
+draw_center = false
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.1, 0.07, 0.05, 1)
+
+[sub_resource type="StyleBoxFlat" id="circulo"]
+bg_color = Color(1, 1, 1, 0.55)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 99
+corner_radius_top_right = 99
+corner_radius_bottom_right = 99
+corner_radius_bottom_left = 99
+
+[sub_resource type="StyleBoxFlat" id="placa"]
+content_margin_left = 6.0
+content_margin_top = 2.0
+content_margin_right = 6.0
+content_margin_bottom = 2.0
+bg_color = Color(0.42, 0.27, 0.14, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.24, 0.15, 0.08, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[resource]
+default_font = SubResource("pixel_negrito")
+default_font_size = 12
+Label/colors/font_color = Color(1, 1, 1, 1)
+Label/colors/font_outline_color = Color(0.12, 0.07, 0.04, 1)
+Label/constants/outline_size = 4
+Titulo/base_type = &"Label"
+Titulo/colors/font_color = Color(1, 0.88, 0.4, 1)
+Titulo/colors/font_outline_color = Color(0.27, 0.12, 0.05, 1)
+Titulo/constants/outline_size = 8
+Titulo/font_sizes/font_size = 24
+Titulo/fonts/font = ExtResource("2_cinzel")
+TextoEscuro/base_type = &"Label"
+TextoEscuro/colors/font_color = Color(0.24, 0.15, 0.08, 1)
+TextoEscuro/constants/outline_size = 0
+TextoEscuro/font_sizes/font_size = 11
+Cartao/base_type = &"PanelContainer"
+Cartao/styles/panel = SubResource("cartao")
+Balao/base_type = &"PanelContainer"
+Balao/styles/panel = SubResource("balao")
+Legenda/base_type = &"PanelContainer"
+Legenda/styles/panel = SubResource("legenda")
+QuadroHQ/base_type = &"Panel"
+QuadroHQ/styles/panel = SubResource("quadro_hq")
+Circulo/base_type = &"Panel"
+Circulo/styles/panel = SubResource("circulo")
+Placa/base_type = &"PanelContainer"
+Placa/styles/panel = SubResource("placa")
