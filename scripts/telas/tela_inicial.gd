@@ -12,12 +12,25 @@ var _tempo := 0.0
 @onready var _netos := {1: %Neto1 as TextureRect, 2: %Neto2 as TextureRect}
 @onready var _teclas := {1: %Teclas1 as TeclasJogador, 2: %Teclas2 as TeclasJogador}
 @onready var _status := {1: %Status1 as Label, 2: %Status2 as Label}
+@onready var _rodape: Label = %Menu
 
 
 func _ready() -> void:
 	Jogo.novo_jogo()
 	Sons.musica("musica_inicio")
 	Elenco.vestir(self)
+	ControleESP32.conexao_mudou.connect(_mostrar_controle)
+	_mostrar_controle(ControleESP32.conectado)
+
+
+## O rodapé avisa quando o controle de ESP32 está ligado.
+func _mostrar_controle(conectado: bool) -> void:
+	if conectado:
+		_rodape.text = "menu     ·     controle ESP32 conectado!"
+		_rodape.add_theme_color_override("font_color", Color(0.6, 1, 0.5))
+	else:
+		_rodape.text = "menu     ·     com controle também funciona!"
+		_rodape.remove_theme_color_override("font_color")
 
 
 func _process(delta: float) -> void:

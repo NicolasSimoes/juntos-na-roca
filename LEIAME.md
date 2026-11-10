@@ -33,8 +33,29 @@ Depois da festa, o jogo volta para o menu.
 | Ação | Espaço | Enter |
 | Controle | Controle 1 | Controle 2 |
 
+- **Controle ESP32** (dois joysticks Funduino no mesmo ESP32, por Bluetooth): o joystick 1
+  é o Jogador 1 e o joystick 2 é o Jogador 2. Mexer o joystick anda, apertar o joystick é
+  AÇÃO, e os dois apertando juntos por 1 segundo é pausa. Veja "Controle de ESP32" abaixo.
 - **Esc**: pausa (no menu, fecha o painel; no prefácio e nos quadrinhos, pula).
 - **F1 a F5**: começa direto no dia escolhido. Serve para testar um dia sem jogar os anteriores.
+
+## Controle de ESP32
+
+1. Grave `joystick_esp32_dois.ino` no ESP32 (placa "ESP32 Dev Module" na IDE do Arduino).
+   Ligue o ESP32 **sem mexer nos joysticks**: ele calibra o centro ao ligar.
+2. No Windows, em **Configurações > Bluetooth**, pareie o **Joystick-ESP32**. Ele vira uma
+   porta COM (o Windows cria duas; a ponte acha a certa sozinha).
+3. Instale o **Python 3** (python.org, marque "Add to PATH").
+4. Abra o jogo. Pelo Godot (F5), o jogo já abre a ponte sozinho. Se não funcionar, ou se
+   for um jogo exportado, dê dois cliques em `ferramentas/ponte_esp32.bat` e deixe a janela
+   aberta. Na primeira vez ele instala o `pyserial`.
+5. Na tela inicial, o rodapé mostra **"controle ESP32 conectado!"** quando está tudo certo.
+
+Como funciona: o Godot não lê porta COM, então `ferramentas/ponte_esp32.py` lê o Bluetooth e
+manda cada linha `J,X1,Y1,B1,X2,Y2,B2` para o jogo pela rede local (UDP 127.0.0.1:4242).
+O autoload `scripts/autoload/controle_esp32.gd` transforma isso nas mesmas ações do teclado
+(`p1_cima`, `p1_acao`, `p2_esquerda`...). Se cima e baixo ficarem trocados, mude
+`INVERTER_Y` nesse arquivo. A porta COM também pode ser fixada: `ponte_esp32.bat --porta COM5`.
 
 ## Como o jogo funciona
 
