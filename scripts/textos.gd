@@ -113,4 +113,6 @@ const HORA_DE_DORMIR := "Agora os dois na porta, para dormir."
 const CREDITOS_EQUIPE := [
 	["Nicolas Simões", ""],
 	["Lucas Braide", ""],
+	["Ravier Rodrigues", ""],
+	["Vinícius Alexander", ""],
 ]
