@@ -1,0 +1,355 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scripts/telas/cartao_missao.gd" id="1_script"]
+[ext_resource type="Theme" path="res://assets/tema/tema_telas.tres" id="2_tema"]
+[ext_resource type="PackedScene" path="res://cenas/objetos/teclas_jogador.tscn" id="3_teclas"]
+
+[sub_resource type="StyleBoxFlat" id="papel"]
+bg_color = Color(0.968627, 0.92549, 0.811765, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.4, 0.24, 0.1, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="balao"]
+content_margin_left = 10.0
+content_margin_top = 4.0
+content_margin_right = 10.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.2, 0.14, 0.1, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="cartao"]
+content_margin_left = 8.0
+content_margin_top = 6.0
+content_margin_right = 8.0
+content_margin_bottom = 6.0
+bg_color = Color(0.3, 0.2, 0.1, 0.95)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="cartao_b"]
+content_margin_left = 8.0
+content_margin_top = 6.0
+content_margin_right = 8.0
+content_margin_bottom = 6.0
+bg_color = Color(0.3, 0.2, 0.1, 0.95)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="faixa"]
+content_margin_left = 8.0
+content_margin_top = 1.0
+content_margin_right = 8.0
+content_margin_bottom = 1.0
+bg_color = Color(1, 0.86, 0.35, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.55, 0.32, 0.08, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="CartaoMissao" type="CanvasLayer"]
+layer = 8
+script = ExtResource("1_script")
+editor_description = "Cartão de missão: aparece antes de toda tarefa. Em cima, a Vovó explica POR QUÊ. Embaixo, um cartão por papel diz O QUÊ cada jogador faz e com quais teclas. Só fecha quando os DOIS apertam AÇÃO. Textos em Textos.MISSOES."
+
+[node name="Raiz" type="Control" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme = ExtResource("2_tema")
+
+[node name="Fundo" type="ColorRect" parent="Raiz"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.05, 0.04, 0.08, 0.6)
+
+[node name="Papel" type="Panel" parent="Raiz"]
+editor_description = "A folha do cartão."
+layout_mode = 0
+offset_left = 40.0
+offset_top = 8.0
+offset_right = 600.0
+offset_bottom = 352.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("papel")
+
+[node name="Titulo" type="Label" parent="Raiz"]
+unique_name_in_owner = true
+editor_description = "Nome da tarefa (vem de Jogo.NOMES)."
+layout_mode = 0
+offset_left = 40.0
+offset_top = 12.0
+offset_right = 600.0
+offset_bottom = 38.0
+theme_override_colors/font_color = Color(0.4, 0.22, 0.06, 1)
+theme_override_colors/font_outline_color = Color(1, 0.92, 0.7, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 20
+text = "Consertar o poço"
+horizontal_alignment = 1
+
+[node name="Vovo" type="TextureRect" parent="Raiz"]
+unique_name_in_owner = true
+editor_description = "Rosto da Vovó (Aparencia.vovo)."
+layout_mode = 0
+offset_left = 62.0
+offset_top = 42.0
+offset_right = 102.0
+offset_bottom = 92.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Balao" type="PanelContainer" parent="Raiz"]
+editor_description = "Balão da Vovó com o POR QUÊ da tarefa."
+layout_mode = 0
+offset_left = 110.0
+offset_top = 44.0
+offset_right = 528.0
+offset_bottom = 90.0
+theme_override_styles/panel = SubResource("balao")
+
+[node name="Porque" type="Label" parent="Raiz/Balao"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
+theme_override_constants/outline_size = 0
+theme_override_font_sizes/font_size = 15
+text = "Sem poço, não tem água para nada!"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Imagem" type="TextureRect" parent="Raiz"]
+unique_name_in_owner = true
+editor_description = "Figura do que a Vovó está falando (vaca, galinha, peixe). Vem de Textos.MISSOES[...]['imagem']."
+layout_mode = 0
+offset_left = 534.0
+offset_top = 42.0
+offset_right = 580.0
+offset_bottom = 92.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="RaboBalao" type="Polygon2D" parent="Raiz"]
+editor_description = "Rabinho do balão apontando para a Vovó."
+position = Vector2(110, 66)
+color = Color(0.2, 0.14, 0.1, 1)
+polygon = PackedVector2Array(2, -6, -10, 2, 2, 6)
+
+[node name="CartaoA" type="PanelContainer" parent="Raiz"]
+unique_name_in_owner = true
+editor_description = "Papel A (círculo da esquerda). A borda fica na cor de quem pegou o papel."
+layout_mode = 0
+offset_left = 60.0
+offset_top = 98.0
+offset_right = 314.0
+offset_bottom = 308.0
+theme_override_styles/panel = SubResource("cartao")
+
+[node name="Coluna" type="VBoxContainer" parent="Raiz/CartaoA"]
+layout_mode = 2
+theme_override_constants/separation = 3
+alignment = 1
+
+[node name="NomeA" type="Label" parent="Raiz/CartaoA/Coluna"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Jogador 1"
+horizontal_alignment = 1
+
+[node name="Figuras" type="HBoxContainer" parent="Raiz/CartaoA/Coluna"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="NetoA" type="TextureRect" parent="Raiz/CartaoA/Coluna/Figuras"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(36, 46)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="IconeA" type="TextureRect" parent="Raiz/CartaoA/Coluna/Figuras"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+size_flags_vertical = 4
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VerboA" type="Label" parent="Raiz/CartaoA/Coluna"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.97, 0.85, 1)
+theme_override_font_sizes/font_size = 13
+text = "Encaixe a tábua no buraco igual"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="TeclasA" parent="Raiz/CartaoA/Coluna" instance=ExtResource("3_teclas")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="StatusA" type="Label" parent="Raiz/CartaoA/Coluna"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.95, 0.6, 1)
+theme_override_font_sizes/font_size = 13
+text = "Aperte Espaço!"
+horizontal_alignment = 1
+
+[node name="CartaoB" type="PanelContainer" parent="Raiz"]
+unique_name_in_owner = true
+editor_description = "Papel B (círculo da direita)."
+layout_mode = 0
+offset_left = 326.0
+offset_top = 98.0
+offset_right = 580.0
+offset_bottom = 308.0
+theme_override_styles/panel = SubResource("cartao_b")
+
+[node name="Coluna" type="VBoxContainer" parent="Raiz/CartaoB"]
+layout_mode = 2
+theme_override_constants/separation = 3
+alignment = 1
+
+[node name="NomeB" type="Label" parent="Raiz/CartaoB/Coluna"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Jogador 2"
+horizontal_alignment = 1
+
+[node name="Figuras" type="HBoxContainer" parent="Raiz/CartaoB/Coluna"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="NetoB" type="TextureRect" parent="Raiz/CartaoB/Coluna/Figuras"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(36, 46)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="IconeB" type="TextureRect" parent="Raiz/CartaoB/Coluna/Figuras"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+size_flags_vertical = 4
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VerboB" type="Label" parent="Raiz/CartaoB/Coluna"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.97, 0.85, 1)
+theme_override_font_sizes/font_size = 13
+text = "Martele quando a setinha passar no prego"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="TeclasB" parent="Raiz/CartaoB/Coluna" instance=ExtResource("3_teclas")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+numero = 2
+
+[node name="StatusB" type="Label" parent="Raiz/CartaoB/Coluna"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.95, 0.6, 1)
+theme_override_font_sizes/font_size = 13
+text = "Aperte Enter!"
+horizontal_alignment = 1
+
+[node name="FaixaDepois" type="PanelContainer" parent="Raiz"]
+unique_name_in_owner = true
+editor_description = "Segunda parte da tarefa, quando existe (ex.: depois de serrar, levar a tora): faixa amarela com ícone."
+layout_mode = 0
+offset_left = 120.0
+offset_top = 306.0
+offset_right = 520.0
+offset_bottom = 328.0
+theme_override_styles/panel = SubResource("faixa")
+
+[node name="Linha" type="HBoxContainer" parent="Raiz/FaixaDepois"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 6
+
+[node name="ImagemDepois" type="TextureRect" parent="Raiz/FaixaDepois/Linha"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(20, 18)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Depois" type="Label" parent="Raiz/FaixaDepois/Linha"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.35, 0.18, 0.04, 1)
+theme_override_constants/outline_size = 0
+theme_override_font_sizes/font_size = 14
+text = "Depois: levem a tora juntos até a casa."
+horizontal_alignment = 1
+
+[node name="Rodape" type="Label" parent="Raiz"]
+editor_description = "Lembra que os dois precisam confirmar."
+layout_mode = 0
+offset_left = 40.0
+offset_top = 330.0
+offset_right = 600.0
+offset_bottom = 350.0
+theme_override_colors/font_color = Color(0.55, 0.3, 0.05, 1)
+theme_override_constants/outline_size = 0
+theme_override_font_sizes/font_size = 13
+text = "Os dois: AÇÃO quando estiverem prontos!"
+horizontal_alignment = 1

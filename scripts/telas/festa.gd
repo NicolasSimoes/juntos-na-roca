@@ -89,6 +89,12 @@ func _montar_mesa() -> void:
 	mesa.size = Vector2(240, 120)
 	mesa.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	add_child(mesa)
+	# deixa claro que a mesa é o resultado do trabalho da dupla
+	var placa := Fontes.rotulo("Tudo o que vocês colheram!", Fontes.pixel(400), 13, Color(1, 0.97, 0.85), 4, Color(0.25, 0.12, 0.05))
+	placa.position = Vector2(36, 290)
+	placa.size = Vector2(240, 18)
+	placa.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	add_child(placa)
 	var itens := HBoxContainer.new()
 	itens.position = Vector2(44, 190)
 	itens.add_theme_constant_override("separation", 1)
@@ -146,7 +152,7 @@ func _montar_album() -> void:
 
 func _mostrar_foto() -> void:
 	if Jogo.fotos.is_empty():
-		_legenda.text = "Sem fotos desta vez"
+		_legenda.text = "Que festa linda!"
 		return
 	var f: Dictionary = Jogo.fotos[_foto % Jogo.fotos.size()]
 	_imagem.texture = f["textura"]

@@ -177,7 +177,7 @@ func _mostrar(delta: float) -> void:
 	var x_cabo := _serra.position.x + (-distancia_cabo if regra.vez == 0 else distancia_cabo)
 	_seta.position = Vector2(x_cabo, _seta_y + 4.0 * sin(tempo * 8.0))   # sobe e desce
 	_seta.modulate = cor.lightened(0.2)
-	_sua_vez.text = "SUA VEZ!" if regra.travada <= 0.0 else "agarrou..."
+	_sua_vez.text = "SUA VEZ!" if regra.travada <= 0.0 else "Travou! Espere."
 	_sua_vez.position.x = x_cabo - _sua_vez.size.x / 2.0
 	# add_theme_color_override troca só a cor deste rótulo, sem mexer no tema.
 	_sua_vez.add_theme_color_override("font_color", cor.lightened(0.3))

@@ -17,13 +17,13 @@ const DIAS := {
 
 const NOMES := {
 	"poco": "Consertar o poço",
-	"lenha": "Lenha",
-	"trator": "Desatolar o trator",
-	"arar": "Arar a terra",
+	"lenha": "Serrar a lenha",
+	"trator": "Tirar o trator da lama",
+	"arar": "Afofar a terra",
 	"plantar": "Plantar a horta",
 	"galinhas": "Recolher as galinhas",
 	"animais": "Cuidar dos animais",
-	"pesca": "Pescar",
+	"pesca": "Pescar no lago",
 	"cuidar_horta": "Cuidar da horta",
 	"colher": "Colher e levar o jerimum",
 }
@@ -74,7 +74,6 @@ var cesta := {}
 var horta: Array[Dictionary] = []
 var fotos: Array[Dictionary] = []
 var ultimo_papel_a := 2   # quem fez o papel da esquerda por último (para sugerir a troca)
-var prefacio_volta_ao_menu := false   # o prefácio foi aberto pelo menu (só para assistir)?
 var _texturas := {}
 
 

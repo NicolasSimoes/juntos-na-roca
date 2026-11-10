@@ -58,7 +58,7 @@ var _empurrador_x := 0.0
 
 ## montar(): a classe Minijogo chama UMA vez, dentro do _ready().
 func montar() -> void:
-	titulo = "Desatolar o trator"
+	titulo = "Tirar o trator da lama"
 	texto_a = "SEGURE %s para acelerar" % Jogo.tecla_acao(na)
 	texto_b = "APERTE %s para empurrar" % Jogo.tecla_acao(nb)
 

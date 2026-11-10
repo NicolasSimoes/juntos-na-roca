@@ -48,9 +48,9 @@ var _boia_y := 0.0
 
 
 func montar() -> void:
-	titulo = "Pescar no píer"
-	texto_a = "Aperte %s: puxe a linha" % Jogo.tecla_acao(na)
-	texto_b = "%s: ande · %s: pegue" % [Jogo.teclas_lado(nb), Jogo.tecla_acao(nb)]
+	titulo = "Pescar no lago"
+	texto_a = "APERTE %s muitas vezes: puxe!" % Jogo.tecla_acao(na)
+	texto_b = "%s: siga a sombra · %s: pegue" % [Jogo.teclas_lado(nb), Jogo.tecla_acao(nb)]
 
 	# Cada sinal da regra vira uma reação na tela.
 	regra.fisgou.connect(_ao_mexer_na_agua)
@@ -74,6 +74,9 @@ func montar() -> void:
 
 func atualizar(_delta: float) -> void:
 	# Jogo.direcao(n) devolve um Vector2 com as setas/WASD; usamos só o x (esquerda/direita).
+	# Apertar a rede antes do pulo não faz nada na regra; aqui só avisamos a criança.
+	if Jogo.apertou(nb) and regra.estado != "pulando":
+		mensagem("Espere o peixe pular!", Color(1, 1, 0.7))
 	regra.passo(_delta, Jogo.apertou(na), Jogo.direcao(nb).x, Jogo.apertou(nb))
 	_mostrar()
 

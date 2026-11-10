@@ -33,7 +33,7 @@ func test_fora_da_vez_trava() -> void:
 	r.passo(DT, false, true)
 	afirmar_igual(r.cortes, 0)
 	afirmar_perto(r.travada, RegraSerra.TEMPO_TRAVADA)
-	afirmar_igual(ev["errou"], ["Agarrou! Um de cada vez."])
+	afirmar_igual(ev["errou"], ["Travou! Um de cada vez."])
 
 
 func test_aperto_durante_travada_e_ignorado() -> void:

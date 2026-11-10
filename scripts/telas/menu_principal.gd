@@ -195,9 +195,10 @@ func _escolher() -> void:
 	Sons.tocar("menu_ok")
 	match OPCOES[_escolha]:
 		"Jogar":
-			# Jogar: prefácio -> quadrinhos -> tela inicial -> fazenda
-			Jogo.prefacio_volta_ao_menu = false
-			_sair_para("res://cenas/prefacio.tscn")
+			# Jogar: quadrinhos -> tela inicial -> fazenda.
+			# A abertura estilo Star Wars (cenas/prefacio.tscn) continua no projeto,
+			# guardada, mas fora do caminho do jogo. Para religar, troque por ela aqui.
+			_sair_para("res://cenas/quadrinhos.tscn")
 		"Como jogar", "Créditos":
 			_abrir_painel(PAINEIS[OPCOES[_escolha]])
 

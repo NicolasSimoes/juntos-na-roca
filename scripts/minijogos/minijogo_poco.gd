@@ -60,7 +60,7 @@ var _barra_x := 0.0
 
 func montar() -> void:
 	titulo = "Consertar o poço"
-	texto_a = "%s: escolha · %s: encaixe" % [Jogo.teclas_lado(na), Jogo.tecla_acao(na)]
+	texto_a = "%s: troque a tábua · %s: encaixe" % [Jogo.teclas_lado(na), Jogo.tecla_acao(na)]
 	texto_b = "Aperte %s no prego" % Jogo.tecla_acao(nb)
 
 	# Embaralha os espaços e a pilha (shuffle) e entrega para a regra.

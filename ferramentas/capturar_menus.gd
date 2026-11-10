@@ -65,14 +65,20 @@ func _rodar() -> void:
 	pref._saindo = true
 	await _fechar(pref)
 
-	# quadrinhos, um quadro de cada vez
+	# quadrinhos: os 8 quadros, um de cada vez, e o convite antes/depois de topar
 	var hq := _abrir("res://cenas/quadrinhos.tscn")
 	await _esperar(40)
 	await _foto("quadrinhos_1")
-	for i in [2, 3, 4]:
+	for i in range(2, 9):
 		hq._mostrar_proximo()
-		await _esperar(40)
+		await _esperar(70 if i == 5 else 40)
 		await _foto("quadrinhos_%d" % i)
+	hq.topar(1)
+	await _esperar(30)
+	await _foto("quadrinhos_8_um_topou")
+	hq.topar(2)
+	await _esperar(50)
+	await _foto("quadrinhos_8_os_dois")
 	hq._saindo = true
 	await _fechar(hq)
 

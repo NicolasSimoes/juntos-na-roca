@@ -16,7 +16,8 @@ func posicao_estacao() -> Vector2:
 
 func papeis() -> Array:
 	var cesta := tex("res://assets/sprites/objetos/cesta.png")
-	return ["colher", "colher", cesta, cesta]
+	var jerimum := tex("res://assets/sprites/objetos/jerimum.png")
+	return ["colher", "colher", jerimum, jerimum]
 
 
 func comecar(a: Jogador, b: Jogador) -> void:
