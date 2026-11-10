@@ -97,12 +97,42 @@ alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.62, 0.25, 1)
 theme_override_font_sizes/font_size = 14
-text = "Jogador 1"
+text = "Jogador 1  ·  Controle 1"
 horizontal_alignment = 1
 
 [node name="Teclas" parent="Jogador1/Linha/Coluna" instance=ExtResource("3_teclas")]
 layout_mode = 2
 animar = true
+
+[node name="Controle" type="HBoxContainer" parent="Jogador1/Linha/Coluna"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 4
+
+[node name="Analogico" parent="Jogador1/Linha/Coluna/Controle" instance=ExtResource("4_tecla")]
+custom_minimum_size = Vector2(56, 20)
+layout_mode = 2
+size_flags_vertical = 4
+texto = "Analógico"
+tamanho_fonte = 8
+cor = Color(1, 0.78, 0.5, 1)
+
+[node name="RotuloAndar" type="Label" parent="Jogador1/Linha/Coluna/Controle"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 9
+text = "andar"
+
+[node name="BotaoA" parent="Jogador1/Linha/Coluna/Controle" instance=ExtResource("4_tecla")]
+custom_minimum_size = Vector2(18, 20)
+layout_mode = 2
+size_flags_vertical = 4
+texto = "A"
+cor = Color(1, 0.78, 0.5, 1)
+
+[node name="RotuloAcao" type="Label" parent="Jogador1/Linha/Coluna/Controle"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 9
+text = "ação"
 
 [node name="Jogador2" type="PanelContainer" parent="."]
 layout_mode = 0
@@ -135,13 +165,43 @@ alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.55, 0.72, 1, 1)
 theme_override_font_sizes/font_size = 14
-text = "Jogador 2"
+text = "Jogador 2  ·  Controle 2"
 horizontal_alignment = 1
 
 [node name="Teclas" parent="Jogador2/Linha/Coluna" instance=ExtResource("3_teclas")]
 layout_mode = 2
 numero = 2
 animar = true
+
+[node name="Controle" type="HBoxContainer" parent="Jogador2/Linha/Coluna"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 4
+
+[node name="Analogico" parent="Jogador2/Linha/Coluna/Controle" instance=ExtResource("4_tecla")]
+custom_minimum_size = Vector2(56, 20)
+layout_mode = 2
+size_flags_vertical = 4
+texto = "Analógico"
+tamanho_fonte = 8
+cor = Color(0.7, 0.82, 1, 1)
+
+[node name="RotuloAndar" type="Label" parent="Jogador2/Linha/Coluna/Controle"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 9
+text = "andar"
+
+[node name="BotaoA" parent="Jogador2/Linha/Coluna/Controle" instance=ExtResource("4_tecla")]
+custom_minimum_size = Vector2(18, 20)
+layout_mode = 2
+size_flags_vertical = 4
+texto = "A"
+cor = Color(0.7, 0.82, 1, 1)
+
+[node name="RotuloAcao" type="Label" parent="Jogador2/Linha/Coluna/Controle"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 9
+text = "ação"
 
 [node name="Cartoes" type="HBoxContainer" parent="."]
 layout_mode = 0
@@ -348,6 +408,12 @@ custom_minimum_size = Vector2(36, 20)
 layout_mode = 2
 size_flags_vertical = 4
 texto = "Enter"
+
+[node name="BotaoA" parent="Rodape" instance=ExtResource("4_tecla")]
+custom_minimum_size = Vector2(18, 20)
+layout_mode = 2
+size_flags_vertical = 4
+texto = "A"
 
 [node name="Voltar" type="Label" parent="Rodape"]
 layout_mode = 2
