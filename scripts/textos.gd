@@ -58,7 +58,7 @@ const MISSOES := {
 		"a": "Puxe a serra quando for sua vez",
 		"b": "Puxe a serra quando for sua vez",
 		"teclas_a": "acao", "teclas_b": "acao",
-		"depois": "Depois: levem a tora juntos até a casa.",
+		"depois": "Depois: levem o tronco juntos até a casa.",
 		"imagem_depois": "res://assets/sprites/objetos/tora.png"},
 	"trator": {"porque": "O trator atolou! Sem ele, nada de plantar.",
 		"a": "SEGURE o botão para acelerar",

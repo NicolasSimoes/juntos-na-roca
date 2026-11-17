@@ -72,7 +72,7 @@ func passo(delta: float, apertou_a: bool, apertou_b: bool) -> void:
 			lado = -1.0 if k == 0 else 1.0        # A puxa para a esquerda, B para a direita
 			acertou.emit()
 			if cortes >= CORTES:
-				terminou.emit("A tora está serrada!")
+				terminou.emit("O tronco está serrado!")
 		else:
 			# Puxou fora da vez: a serra agarra por um instante.
 			travada = TEMPO_TRAVADA

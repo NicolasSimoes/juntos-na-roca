@@ -71,7 +71,7 @@ func test_doze_cortes_termina() -> void:
 	for i in RegraSerra.CORTES:
 		r.passo(DT, i % 2 == 0, i % 2 == 1)
 	afirmar_igual(r.cortes, 12)
-	afirmar_igual(ev["terminou"], ["A tora está serrada!"])
+	afirmar_igual(ev["terminou"], ["O tronco está serrado!"])
 	r.passo(DT, true, false)
 	r.passo(DT, false, true)
 	afirmar_igual(r.cortes, 12)

@@ -36,12 +36,12 @@ func _serrou() -> void:
 	overlay = null
 	fazenda.travar(false)
 	_fase = "carregar"
-	dica = "Fiquem pertinho, senão a tora cai!"
+	dica = "Fiquem pertinho, senão o tronco cai!"
 	_tora = CarregarJuntos.new().configurar("res://assets/sprites/objetos/tora.png", Lugares.TORA + Vector2(0, 8), Lugares.DESTINO_LENHA)
 	fazenda.mundo.add_child(_tora)
 	_tora.entregue.connect(_entregou)
 	_tora.caiu.connect(func(): fazenda.hud.aviso("Caiu! Fiquem pertinho."))
-	fazenda.hud.falar("Agora levem a tora até a casa. Juntos!")
+	fazenda.hud.falar("Agora levem o tronco até a casa. Juntos!")
 
 
 func _entregou() -> void:

@@ -92,7 +92,7 @@ var _seta_y: float
 func montar() -> void:
 	# Textos que a classe Minijogo mostra no topo e na faixa de baixo.
 	# Jogo.tecla_acao(n) devolve "Espaço" para o jogador 1 e "Enter" para o 2.
-	titulo = "Serrar a tora"
+	titulo = "Serrar o tronco"
 	texto_a = "APERTE %s na sua vez" % Jogo.tecla_acao(na)
 	texto_b = "APERTE %s na sua vez" % Jogo.tecla_acao(nb)
 

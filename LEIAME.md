@@ -71,7 +71,7 @@ O autoload `scripts/autoload/controle_esp32.gd` transforma isso nas mesmas açõ
 
 | Dia | Tarefas |
 |---|---|
-| 1 | Consertar o poço (buscar a corda e as tábuas, encaixar as tábuas e martelar no tempo certo) e lenha (serra alternada e carregar a tora juntos) |
+| 1 | Consertar o poço (buscar a corda e as tábuas, encaixar as tábuas e martelar no tempo certo) e lenha (serra alternada e carregar o tronco juntos) |
 | 2 | Desatolar o trator (um acelera, o outro empurra) e arar a terra (um dirige, o outro tira as pedras) |
 | 3 | Plantar a horta (um semeia, o outro rega) e recolher as galinhas (cercar juntos) |
 | 4 | Cuidar dos animais (milho e água, depois a ordenha), pescar (linha e puçá) e cuidar da horta (regar e tirar o mato) |
